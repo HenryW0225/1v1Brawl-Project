@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1v1 Brawl!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>1v1 Brawl!</h1>
+    <div id="startMenu">
+        <h2>Welcome!</h2>
+        <input type="text" id="usernameInput" placeholder="Enter your username" />
+        <button id="createBtn">Create Room</button>
+        <button id="joinBtn">Join Room</button>
+    </div>
+    <div id="enterCodePage" style="display:none;">
+        <input type="text" id="codeInput" placeholder="Room code" />
+        <button id="enterBtn">Join</button>
+    </div>
+    <div id="loadingPage" style="display:none;">
+        <p id="roomCodeDisplay">Room Code: <span id="roomCode">???</span></p>
+        <table id="players">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button id="startBtn">Start Game</button>
+    </div>
+    <div id = "gameContainer">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
+

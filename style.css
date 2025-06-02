@@ -97,7 +97,7 @@
     font-weight: 700;
   }
   
-  #gameContainer {
+  /*#gameContainer {
     width: 100%;
     max-width: 800px;
     height: 500px;
@@ -128,5 +128,5 @@
     #gameContainer {
       height: 300px;
     }
-  }
+  }*/
   

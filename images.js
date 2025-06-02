@@ -1,5 +1,5 @@
 export const worldmapImg = new Image();
-worldmapImg.src = "https://imgur.com/a/oU0BQMu.png";
+worldmapImg.src = "https://i.imgur.com/etGDF0W.jpeg";
 
 export const playerImg = new Image();
-playerImg.src = "https://imgur.com/a/MdZZyMT.png";
+playerImg.src = "https://i.imgur.com/y7dehBL.png";

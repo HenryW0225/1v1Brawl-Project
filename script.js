@@ -7,6 +7,7 @@ const enterBtn = document.getElementById("enterBtn");
 const codeInput = document.getElementById("codeInput");
 
 let playerName = "";
+let roomCode = "-1";
 
 createBtn.addEventListener("click", () => {
     const name = usernameInput.value.trim();
@@ -30,12 +31,35 @@ joinBtn.addEventListener("click", () => {
     }
 });
 
+enterBtn.addEventListener("click", () => {
+    const code = usernameInput.value.trim();
+    if (code !== "-1") {
+        document.getElementById("enterCodePage").style.display = "none";
+        loading_page();
+    } else {
+        alert("wrong room code");
+    }
+});
+
 function loading_page() {
     document.getElementById("roomCode").textContent = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
     document.getElementById("loadingPage").style.display = "block";
+
     
 }
 
 function enter_code_page() {
     document.getElementById("enterCodePage").style.display = "block";
+}
+
+startBtn.addEventListener("click", () => {
+   update_game() 
+});
+
+function start_game() {
+    document.getElementById("loadingPage").style.display = "none";
+    document.getElementById("gameContainer").style.display = "block";
+    
+
+
 }

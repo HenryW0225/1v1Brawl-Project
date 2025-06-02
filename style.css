@@ -98,12 +98,11 @@
   }
   
   canvas {
-    width: 100%;
-    max-width: 1000px;
-    height: auto;
-    aspect-ratio: 5 / 3;
     display: block;
+    border: 2px solid black;
+    background-color: lightblue;
   }
+  
   
 
   #gameContainer {

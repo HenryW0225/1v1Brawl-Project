@@ -53,7 +53,7 @@ joinBtn.addEventListener("click", () => {
 });
 
 enterBtn.addEventListener("click", () => {
-    const code = usernameInput.value.trim();
+    const code = codeInput.value.trim();
     if (code !== "-1") {
         document.getElementById("enterCodePage").style.display = "none";
         loading_page();
@@ -91,7 +91,7 @@ function background_map() {
 
 function gameLoop() {
     background_map();
-    ctx.drawImage(images.playerIMG, canvas.width/2 - player.width/2, canvas.height/2 - player.height/2, player.width, player.height);
+    ctx.drawImage(images.playerImg, canvas.width/2 - player.width/2, canvas.height/2 - player.height/2, player.width, player.height);
     requestAnimationFrame(gameLoop);
 }
 

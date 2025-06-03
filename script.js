@@ -42,11 +42,11 @@ let isReloading = false;
 
 let assault_rife_bullets = [];
 
-/*let shotgun = {
-    
+let shotgun = {
+    ammo: 5
 }
 
-let shotgun_bullets = [];*/
+let shotgun_bullets = [];
 
 let keys = {};
 
@@ -170,7 +170,7 @@ function move_assault_rife_bullets() {
 function draw_assault_rife_bullets() {
     for (let bullet of assault_rife_bullets) {
         ctx.save();
-        ctx.translate(bullet.world_x - position_x + canvas.width / 2, bullet.world_y - position_y + canvas.height / 2);
+        ctx.translate(bullet.world_x, bullet.world_y);
         ctx.rotate(bullet.angle - Math.PI/2);
         ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
         ctx.restore();
@@ -178,6 +178,9 @@ function draw_assault_rife_bullets() {
 }
 
 function gameLoop() {
+    document.getElementById("arAmmo").textContent = assault_rife.ammo;
+    document.getElementById("sgAmmo").textContent = shotgun.ammo; 
+
     background_map();
     move_player();
     move_assault_rife_bullets();

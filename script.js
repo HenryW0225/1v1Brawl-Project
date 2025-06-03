@@ -36,16 +36,16 @@ let assault_rife = {
     ammo: 30,
     width: 15,
     height: 30,
-    speed: 15
+    speed: 10
 }
 
 let assault_rife_bullets = [];
 
-let shotgun = {
+/*let shotgun = {
     
 }
 
-let shotgun_bullets = [];
+let shotgun_bullets = [];*/
 
 let keys = {};
 
@@ -202,9 +202,9 @@ window.addEventListener("mousedown", () => {
     if (!gameOver && assault_rife.ammo != 0) {
         assault_rife.ammo -= 1;
         assault_rife_bullets.push({
-            world_x: player.world_x,
-            world_y: player.world_y,
-            angle: player.angle + Math.PI/2
+            world_x: player.world_x - position_x + canvas.width / 2,
+            world_y: player.world_y - position_y + canvas.height / 2,
+            angle: player.angle - Math.PI/2
         })
     }
 });

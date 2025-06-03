@@ -12,6 +12,7 @@ import * as images from './images.js';
 let playerName = "";
 let roomCode = "-1";
 let gameOver = true;
+let WorldMap;
 
 
 canvas.width = 1000;
@@ -23,9 +24,11 @@ let world_height = 1200;
 let player = {
     world_x: 250,
     world_y: 600,
-    width: 100,
-    height: 100
+    width: 60,
+    height: 60
 }
+
+let keys = {};
 
 let position_x = 0;
 let position_y = 0;
@@ -65,8 +68,6 @@ enterBtn.addEventListener("click", () => {
 function loading_page() {
     document.getElementById("roomCode").textContent = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
     document.getElementById("loadingPage").style.display = "block";
-
-    
 }
 
 function enter_code_page() {
@@ -80,34 +81,44 @@ startBtn.addEventListener("click", () => {
     gameLoop();
 });
 
+
+images.originalworldmapImg.onload = () => {
+    const offscreen = document.createElement("canvas");
+    offscreen.width = world_width;
+    offscreen.height = world_height;
+    const offCtx = offscreen.getContext("2d");
+    offCtx.drawImage(images.originalworldmapImg, 0, 0, world_width, world_height);
+    WorldMap = offscreen;
+};
+
+
 function background_map() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    position_x = Math.max(player.world_x, canvas.width/2);
-    position_y = Math.max(player.world_y, canvas.height/2);
-    position_x = Math.min(player.world_x, world_width - canvas.width/2);
-    position_y = Math.min(player.world_y, world_height - canvas.height/2);
-    ctx.drawImage(images.worldmapImg, position_x - canvas.width/2, position_y - canvas.height/2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+    position_x = Math.max(Math.min(player.world_x, world_width - canvas.width/2), canvas.width/2);
+    position_y = Math.max(Math.min(player.world_y, world_height - canvas.height/2), canvas.height/2);
+    ctx.drawImage(WorldMap, position_x - canvas.width/2, position_y - canvas.height/2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 }
 
 function gameLoop() {
+    if (!gameOver) {
+        if (keys["KeyA"]) player.world_x -= 5;
+        if (keys["KeyD"]) player.world_x += 5;
+        if (keys["KeyW"]) player.world_y -= 5;
+        if (keys["KeyS"]) player.world_y += 5;
+        player.world_x = Math.max(0, Math.min(world_width, player.world_x));
+        player.world_y = Math.max(0, Math.min(world_height, player.world_y));
+    }
+
     background_map();
     ctx.drawImage(images.playerImg, canvas.width/2 - player.width/2, canvas.height/2 - player.height/2, player.width, player.height);
     requestAnimationFrame(gameLoop);
 }
 
+
 document.addEventListener("keydown", function(event) {
-    if (!gameOver) {
-        if (event.code === "KeyA") {
-            player.world_x -= 5;
-        }
-        if (event.code === "KeyD") {
-            player.world_x += 5;
-        }
-        if (event.code === "KeyW") {
-            player.world_y -= 5;
-        }
-        if (event.code === "KeyS") {
-            player.world_y += 5;
-        }
-    }
-})
+    keys[event.code] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keys[event.code] = false;
+});

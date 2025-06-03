@@ -31,7 +31,6 @@ let player = {
 
 let assult_rife = {
     damage: 10,
-    falloff: 0.1,
     ammo: 30
 }
 
@@ -45,7 +44,7 @@ let position_y = 0;
 let mouseX = 0;
 let mouseY = 0;
 
-canvas.addEventListener("mousemove", (e) => {
+windows.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
@@ -135,7 +134,7 @@ function draw_player() {
 
     const dx = worldMouseX - player.world_x;
     const dy = worldMouseY - player.world_y;
-    const angle = Math.atan2(dy, dx);
+    const angle = Math.atan2(dy, dx) + Math.PI/2;
 
     ctx.save();
     ctx.translate(offsetX, offsetY);
@@ -168,6 +167,17 @@ document.addEventListener("keydown", function(event) {
         assault_rife.ammo = 30;
     }
 })
+
+windows.addEventListener("mousedown", () => {
+    if (!gameOver && assault_rife.ammo != 0) {
+        assult_rife.ammo -= 1;
+        bullets.push({
+            world_x: player.world_x,
+            world_y: player.world_y,
+            speed: 10,
+        })
+    }
+});
 
 document.addEventListener("keydown", function(event) {
     if (event.code === "KeyR" && !gameOver) {

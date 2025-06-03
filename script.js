@@ -1,5 +1,6 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
 const createBtn = document.getElementById("createBtn");
 const joinBtn = document.getElementById("joinBtn");
 const usernameInput = document.getElementById("usernameInput");
@@ -13,7 +14,6 @@ let playerName = "";
 let roomCode = "-1";
 let gameOver = true;
 let WorldMap;
-
 
 canvas.width = 1000;
 canvas.height = 600;
@@ -129,14 +129,20 @@ function move_player() {
 function draw_player() {
     const offsetX = player.world_x - position_x + canvas.width / 2;
     const offsetY = player.world_y - position_y + canvas.height / 2;
-    const dx = mouseX - offsetX;
-    const dy = mouseY - offsetY;
+
+    const worldMouseX = mouseX + position_x - canvas.width / 2;
+    const worldMouseY = mouseY + position_y - canvas.height / 2;
+
+    const dx = worldMouseX - player.world_x;
+    const dy = worldMouseY - player.world_y;
     const angle = Math.atan2(dy, dx);
+
     ctx.save();
     ctx.translate(offsetX, offsetY);
     ctx.rotate(angle);
     ctx.drawImage(images.playerImg, -player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
+
 }
 
 function gameLoop() {
@@ -156,3 +162,16 @@ document.addEventListener("keydown", function(event) {
 document.addEventListener("keyup", function(event) {
     keys[event.code] = false;
 });
+
+document.addEventListener("keydown", function(event) {
+    if (event.code === "KeyR" && !gameOver) {
+        assault_rife.ammo = 30;
+    }
+})
+
+document.addEventListener("keydown", function(event) {
+    if (event.code === "KeyR" && !gameOver) {
+        assault_rife.ammo = 30;
+    }
+})
+

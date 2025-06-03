@@ -21,20 +21,30 @@ canvas.height = 600;
 let world_width = 2000;
 let world_height = 1200;
 
+
+
 let player = {
     world_x: 250,
     world_y: 600,
     width: 60,
     height: 60,
-    health: 100
+    health: 100,
+    angle: 0
 }
 
 let assult_rife = {
-    damage: 10,
-    ammo: 30
+    damage: 5,
+    ammo: 30,
+    speed: 15
 }
 
-let bullets = [];
+let assult_rife_bullets = [];
+
+let shotgun = {
+    
+}
+
+let shotgun_bullets = [];
 
 let keys = {};
 
@@ -44,7 +54,7 @@ let position_y = 0;
 let mouseX = 0;
 let mouseY = 0;
 
-windows.addEventListener("mousemove", (e) => {
+window.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
@@ -134,19 +144,32 @@ function draw_player() {
 
     const dx = worldMouseX - player.world_x;
     const dy = worldMouseY - player.world_y;
-    const angle = Math.atan2(dy, dx) + Math.PI/2;
+    player.angle = Math.atan2(dy, dx) + Math.PI/2;
 
     ctx.save();
     ctx.translate(offsetX, offsetY);
-    ctx.rotate(angle);
+    ctx.rotate(player.angle);
     ctx.drawImage(images.playerImg, -player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
+
+}
+
+function move_assult_rife_bullets() {
+    for (let bullet of assult_rife_bullets) {
+        bullet.world_x += Math.floor(Math.cos(bullet.angle) * assault_rife.speed);
+        bullet.world_y += Math.floor(Math.sin(bullet.angle) * assault_rife.speed);
+    }
+}
+
+function draw_assault_rife_bullets() {
 
 }
 
 function gameLoop() {
     background_map();
     move_player();
+    move_assault_rife_bullets();
+    draw_assault_rife_bullets();
     draw_player();
 
 
@@ -168,20 +191,16 @@ document.addEventListener("keydown", function(event) {
     }
 })
 
-windows.addEventListener("mousedown", () => {
+window.addEventListener("mousedown", () => {
     if (!gameOver && assault_rife.ammo != 0) {
         assult_rife.ammo -= 1;
-        bullets.push({
+        assult_rife_bullets.push({
             world_x: player.world_x,
             world_y: player.world_y,
-            speed: 10,
+            angle: player.angle
         })
     }
 });
 
-document.addEventListener("keydown", function(event) {
-    if (event.code === "KeyR" && !gameOver) {
-        assault_rife.ammo = 30;
-    }
-})
+
 

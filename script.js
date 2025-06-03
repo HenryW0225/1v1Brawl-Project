@@ -25,13 +25,31 @@ let player = {
     world_x: 250,
     world_y: 600,
     width: 60,
-    height: 60
+    height: 60,
+    health: 100
 }
+
+let assult_rife = {
+    damage: 10,
+    falloff: 0.1,
+    ammo: 30
+}
+
+let bullets = [];
 
 let keys = {};
 
 let position_x = 0;
 let position_y = 0;
+
+let mouseX = 0;
+let mouseY = 0;
+
+canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+});
 
 createBtn.addEventListener("click", () => {
     const name = usernameInput.value.trim();
@@ -99,20 +117,33 @@ function background_map() {
     ctx.drawImage(WorldMap, position_x - canvas.width/2, position_y - canvas.height/2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 }
 
-function gameLoop() {
-    if (!gameOver) {
-        if (keys["KeyA"]) player.world_x -= 5;
-        if (keys["KeyD"]) player.world_x += 5;
-        if (keys["KeyW"]) player.world_y -= 5;
-        if (keys["KeyS"]) player.world_y += 5;
-        player.world_x = Math.max(0, Math.min(world_width, player.world_x));
-        player.world_y = Math.max(0, Math.min(world_height, player.world_y));
-    }
+function move_player() {
+    if (keys["KeyA"]) player.world_x -= 5;
+    if (keys["KeyD"]) player.world_x += 5;
+    if (keys["KeyW"]) player.world_y -= 5;
+    if (keys["KeyS"]) player.world_y += 5;
+    player.world_x = Math.max(0, Math.min(world_width, player.world_x));
+    player.world_y = Math.max(0, Math.min(world_height, player.world_y));
+}
 
-    background_map();
+function draw_player() {
     const offsetX = player.world_x - position_x + canvas.width / 2;
     const offsetY = player.world_y - position_y + canvas.height / 2;
-    ctx.drawImage(images.playerImg, offsetX - player.width / 2, offsetY - player.height / 2, player.width, player.height);
+    const dx = mouseX - offsetX;
+    const dy = mouseY - offsetY;
+    const angle = Math.atan2(dy, dx);
+    ctx.save();
+    ctx.translate(offsetX, offsetY);
+    ctx.rotate(angle);
+    ctx.drawImage(images.playerImg, -player.width / 2, -player.height / 2, player.width, player.height);
+    ctx.restore();
+}
+
+function gameLoop() {
+    background_map();
+    move_player();
+    draw_player();
+
 
     requestAnimationFrame(gameLoop);
 }

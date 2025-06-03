@@ -15,15 +15,15 @@ let roomCode = "-1";
 let gameOver = true;
 let WorldMap;
 
-canvas.width = 1000;
-canvas.height = 600;
+canvas.width = 1250;
+canvas.height = 750;
 
-let world_width = 2000;
-let world_height = 1200;
+let world_width = canvas.width*2;
+let world_height = canvas.height*2;
 
 let player = {
     world_x: 250,
-    world_y: 600,
+    world_y: canvas.height,
     width: 60,
     height: 60,
     health: 100,

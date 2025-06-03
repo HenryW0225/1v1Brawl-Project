@@ -24,10 +24,14 @@ let world_height = canvas.height*2;
 let player = {
     world_x: 250,
     world_y: canvas.height,
-    width: 60,
-    height: 60,
+    angle: 0,
+    width: 50,
+    height: 50,
     health: 100,
-    angle: 0
+    speed: 5,
+    arSlowTimeoutId: null,
+    shotgunSlowTimeoutId: null,
+    weapon: 1
 }
 
 let assault_rife = {
@@ -35,19 +39,28 @@ let assault_rife = {
     ammo: 30,
     width: 15,
     height: 30,
-    speed: 20
+    speed: 20,
+    range: 60
 }
-
-let isReloading = false;
-let reloadTimeoutId = null;
 
 let assault_rife_bullets = [];
 
 let shotgun = {
-    ammo: 5
+    damage: 5,
+    ammo: 5,
+    bullet_amount: 6,
+    spread: Math.PI / 16,
+    width: 10,
+    height: 20,
+    speed: 25,
+    range: 20
 }
 
 let shotgun_bullets = [];
+
+let isReloading = false;
+let reloadTimeoutId = null;
+
 
 let keys = {};
 
@@ -130,10 +143,21 @@ function background_map() {
 }
 
 function move_player() {
-    if (keys["KeyA"]) player.world_x -= 5;
-    if (keys["KeyD"]) player.world_x += 5;
-    if (keys["KeyW"]) player.world_y -= 5;
-    if (keys["KeyS"]) player.world_y += 5;
+    let dx = 0;
+    let dy = 0;
+    if (keys["KeyA"]) dx -= 1;
+    if (keys["KeyD"]) dx += 1;
+    if (keys["KeyW"]) dy -= 1;
+    if (keys["KeyS"]) dy += 1;
+
+    const length = Math.hypot(dx, dy);
+    if (length > 0) {
+        dx = (dx / length) * player.speed;
+        dy = (dy / length) * player.speed;
+    }
+    player.world_x += dx;
+    player.world_y += dy;
+
     player.world_x = Math.max(0, Math.min(world_width, player.world_x));
     player.world_y = Math.max(0, Math.min(world_height, player.world_y));
 }
@@ -160,9 +184,10 @@ function draw_player() {
 function move_assault_rife_bullets() {
     for (let i = assault_rife_bullets.length - 1; i >= 0; i--) {
         let bullet = assault_rife_bullets[i];
+        bullet.distance += 1;
         bullet.world_x += Math.cos(bullet.angle) * assault_rife.speed;
         bullet.world_y += Math.sin(bullet.angle) * assault_rife.speed;
-        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height) {
+        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height || bullet.distance > assault_rife.range) {
             assault_rife_bullets.splice(i, 1);
         }
     }
@@ -178,12 +203,52 @@ function draw_assault_rife_bullets() {
     }
 }
 
+function assault_rife_slow() {
+    player.speed *= 0.4;
+    clearTimeout(player.arSlowTimeoutId);
+    player.arSlowTimeoutId = setTimeout(() => {
+        player.speed *= 2.5;
+    }, 300); 
+}
+
+function move_shotgun_bullets() {
+    for (let i = shotgun_bullets.length - 1; i >= 0; i--) {
+        let bullet = shotgun_bullets[i];
+        bullet.distance += 1;
+        bullet.world_x += Math.cos(bullet.angle) * shotgun.speed;
+        bullet.world_y += Math.sin(bullet.angle) * shotgun.speed;
+        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height || bullet.distance > shotgun.range) {
+            shotgun_bullets.splice(i, 1);
+        }
+    }
+}
+
+function draw_shotgun_bullets() {
+    for (let bullet of shotgun_bullets) {
+        ctx.save();
+        ctx.translate(bullet.world_x, bullet.world_y);
+        ctx.rotate(bullet.angle - Math.PI/2);
+        ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
+        ctx.restore();
+    }
+}
+
+function shotgun_slow() {
+    player.speed *= 0.4;
+    clearTimeout(player.shotgunSlowTimeoutId);
+    player.shotgunSlowTimeoutId = setTimeout (() => {
+        player.speed *= 2.5;
+    }, 500);
+}
+
 function gameLoop() {
     document.getElementById("arAmmo").textContent = assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = shotgun.ammo; 
 
     background_map();
     move_player();
+    move_shotgun_bullets();
+    draw_shotgun_bullets();
     move_assault_rife_bullets();
     draw_assault_rife_bullets();
     draw_player();
@@ -202,30 +267,76 @@ document.addEventListener("keyup", function(event) {
 });
 
 document.addEventListener("keydown", function(event) {
-    if (event.code === "KeyR" && !gameOver && !isReloading && assault_rife.ammo < 30) {
-        isReloading = true;
-
-        reloadTimeoutId = setTimeout(() => {
-            assault_rife.ammo = 30;
-            isReloading = false;
-            reloadTimeoutId = null;
-        }, 2000);
+    if (event.code === "KeyR" && !gameOver && !isReloading) {
+        if (player.weapon === 1 && assault_rife.ammo < 30) {
+            isReloading = true;
+            reloadTimeoutId = setTimeout(() => {
+                assault_rife.ammo = 30;
+                isReloading = false;
+                reloadTimeoutId = null;
+            }, 2000);
+        }
+        else if (player.weapon === 2 && shotgun.ammo < 5) {
+            isReloading = true;
+            reloadTimeoutId = setTimeout(() => {
+                shotgun.ammo += 1;
+                isReloading = false;
+                reloadTimeoutId = null;
+            }, 500);
+        }
     }
-})
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.code === "Digit1" && player.weapon != 1) {
+        player.speed = 5;
+        clearTimeout(reloadTimeoutId);
+        isReloading = false;
+        reloadTimeoutId = null;
+        player.weapon = 1;
+        clearTimeout(player.shotgunSlowTimeoutId);
+    } 
+    else if (event.code === "Digit2" && player.weapon != 2) {
+        player.speed = 5;
+        clearTimeout(reloadTimeoutId);
+        isReloading = false;
+        reloadTimeoutId = null;
+        player.weapon = 2;
+        clearTimeout(player.arSlowTimeoutId);
+    }
+});
 
 window.addEventListener("mousedown", () => {
-    if (!gameOver && assault_rife.ammo != 0) {
-        if (isReloading) {
-            clearTimeout(reloadTimeoutId);
-            isReloading = false;
-            reloadTimeoutId = null;
+    if (!gameOver) {
+        if (player.weapon === 1 && assault_rife.ammo != 0) {
+            if (isReloading) {
+                clearTimeout(reloadTimeoutId);
+                isReloading = false;
+                reloadTimeoutId = null;
+            }
+            assault_rife.ammo -= 1;
+            assault_rife_bullets.push({
+                world_x: player.world_x - position_x + canvas.width / 2,
+                world_y: player.world_y - position_y + canvas.height / 2,
+                angle: player.angle - Math.PI/2,
+                distance: 0
+            })
+
+            assault_rife_slow();
         }
-        assault_rife.ammo -= 1;
-        assault_rife_bullets.push({
-            world_x: player.world_x - position_x + canvas.width / 2,
-            world_y: player.world_y - position_y + canvas.height / 2,
-            angle: player.angle - Math.PI/2
-        })
+        else if (player.weapon === 2 && shotgun.ammo != 0) {
+            shotgun.ammo -= 1;
+            for (let i = 0; i < shotgun.bullet_amount; i++) {
+                shotgun_bullets.push({
+                    world_x: player.world_x - position_x + canvas.width / 2,
+                    world_y: player.world_y - position_y + canvas.height / 2,
+                    angle: player.angle + Math.random() * shotgun.spread - shotgun.spread/2,
+                    distance: 0
+                })
+            }
+
+            shotgun_slow();
+        }
     }
 });
 

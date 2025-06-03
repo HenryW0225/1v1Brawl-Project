@@ -204,10 +204,10 @@ function draw_assault_rife_bullets() {
 }
 
 function assault_rife_slow() {
-    player.speed *= 0.4;
+    player.speed *= 2;
     clearTimeout(player.arSlowTimeoutId);
     player.arSlowTimeoutId = setTimeout(() => {
-        player.speed *= 2.5;
+        player.speed *= 5;
     }, 300); 
 }
 
@@ -234,10 +234,10 @@ function draw_shotgun_bullets() {
 }
 
 function shotgun_slow() {
-    player.speed *= 0.4;
+    player.speed *= 2;
     clearTimeout(player.shotgunSlowTimeoutId);
     player.shotgunSlowTimeoutId = setTimeout (() => {
-        player.speed *= 2.5;
+        player.speed *= 5;
     }, 500);
 }
 
@@ -282,7 +282,7 @@ document.addEventListener("keydown", function(event) {
                 shotgun.ammo += 1;
                 isReloading = false;
                 reloadTimeoutId = null;
-            }, 500);
+            }, 750);
         }
     }
 });

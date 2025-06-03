@@ -22,7 +22,6 @@ let world_width = 2000;
 let world_height = 1200;
 
 
-
 let player = {
     world_x: 250,
     world_y: 600,
@@ -32,13 +31,15 @@ let player = {
     angle: 0
 }
 
-let assult_rife = {
+let assault_rife = {
     damage: 5,
     ammo: 30,
+    width: 4,
+    height: 8,
     speed: 15
 }
 
-let assult_rife_bullets = [];
+let assault_rife_bullets = [];
 
 let shotgun = {
     
@@ -154,15 +155,21 @@ function draw_player() {
 
 }
 
-function move_assult_rife_bullets() {
-    for (let bullet of assult_rife_bullets) {
+function move_assault_rife_bullets() {
+    for (let bullet of assault_rife_bullets) {
         bullet.world_x += Math.floor(Math.cos(bullet.angle) * assault_rife.speed);
         bullet.world_y += Math.floor(Math.sin(bullet.angle) * assault_rife.speed);
     }
 }
 
 function draw_assault_rife_bullets() {
-
+    for (let bullet of assault_rife_bullets) {
+        ctx.save();
+        ctx.translate(bullet.world_x, bullet.world_y);
+        ctx.rotate(bullet.angle);
+        ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
+        ctx.restore();
+    }
 }
 
 function gameLoop() {
@@ -193,8 +200,8 @@ document.addEventListener("keydown", function(event) {
 
 window.addEventListener("mousedown", () => {
     if (!gameOver && assault_rife.ammo != 0) {
-        assult_rife.ammo -= 1;
-        assult_rife_bullets.push({
+        assault_rife.ammo -= 1;
+        assault_rife_bullets.push({
             world_x: player.world_x,
             world_y: player.world_y,
             angle: player.angle

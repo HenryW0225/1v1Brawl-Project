@@ -21,7 +21,6 @@ canvas.height = 600;
 let world_width = 2000;
 let world_height = 1200;
 
-
 let player = {
     world_x: 250,
     world_y: 600,
@@ -38,6 +37,8 @@ let assault_rife = {
     height: 30,
     speed: 10
 }
+
+let isReloading = false;
 
 let assault_rife_bullets = [];
 
@@ -197,13 +198,24 @@ document.addEventListener("keyup", function(event) {
 });
 
 document.addEventListener("keydown", function(event) {
-    if (event.code === "KeyR" && !gameOver) {
-        assault_rife.ammo = 30;
+    if (event.code === "KeyR" && !gameOver && !isReloading && assault_rife.ammo < 30) {
+        isReloading = true;
+
+        reloadTimeoutId = setTimeout(() => {
+            assault_rife.ammo = 30;
+            isReloading = false;
+            reloadTimeoutId = null;
+        }, 2000);
     }
 })
 
 window.addEventListener("mousedown", () => {
     if (!gameOver && assault_rife.ammo != 0) {
+        if (isReloading) {
+            clearTimeout(reloadTimeoutId);
+            isReloading = false;
+            reloadTimeoutId = null;
+        }
         assault_rife.ammo -= 1;
         assault_rife_bullets.push({
             world_x: player.world_x - position_x + canvas.width / 2,

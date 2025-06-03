@@ -110,7 +110,10 @@ function gameLoop() {
     }
 
     background_map();
-    ctx.drawImage(images.playerImg, canvas.width/2 - player.width/2, canvas.height/2 - player.height/2, player.width, player.height);
+    const offsetX = player.world_x - position_x + canvas.width / 2;
+    const offsetY = player.world_y - position_y + canvas.height / 2;
+    ctx.drawImage(images.playerImg, offsetX - player.width / 2, offsetY - player.height / 2, player.width, player.height);
+
     requestAnimationFrame(gameLoop);
 }
 

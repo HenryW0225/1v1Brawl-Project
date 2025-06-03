@@ -239,7 +239,7 @@ function shotgun_slow() {
     player.shotgunSlowTimeoutId = setTimeout (() => {
         player.speed = 5;
         player.shotgunSlowTimeoutId = null;
-    }, 500);
+    }, 750);
 }
 
 function gameLoop() {
@@ -331,7 +331,7 @@ window.addEventListener("mousedown", () => {
                 shotgun_bullets.push({
                     world_x: player.world_x - position_x + canvas.width / 2,
                     world_y: player.world_y - position_y + canvas.height / 2,
-                    angle: player.angle + Math.random() * shotgun.spread - shotgun.spread/2,
+                    angle: player.angle + Math.random() * shotgun.spread - shotgun.spread/2 - Math.PI/2,
                     distance: 0
                 })
             }

@@ -35,10 +35,11 @@ let assault_rife = {
     ammo: 30,
     width: 15,
     height: 30,
-    speed: 10
+    speed: 20
 }
 
 let isReloading = false;
+let reloadTimeoutId = null;
 
 let assault_rife_bullets = [];
 

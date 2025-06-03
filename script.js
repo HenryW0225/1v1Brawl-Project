@@ -204,10 +204,10 @@ function draw_assault_rife_bullets() {
 }
 
 function assault_rife_slow() {
-    player.speed *= 2;
+    player.speed = 2;
     clearTimeout(player.arSlowTimeoutId);
     player.arSlowTimeoutId = setTimeout(() => {
-        player.speed *= 5;
+        player.speed = 5;
     }, 300); 
 }
 
@@ -234,10 +234,11 @@ function draw_shotgun_bullets() {
 }
 
 function shotgun_slow() {
-    player.speed *= 2;
+    player.speed = 2;
     clearTimeout(player.shotgunSlowTimeoutId);
     player.shotgunSlowTimeoutId = setTimeout (() => {
-        player.speed *= 5;
+        player.speed = 5;
+        player.shotgunSlowTimeoutId = null;
     }, 500);
 }
 
@@ -324,7 +325,7 @@ window.addEventListener("mousedown", () => {
 
             assault_rife_slow();
         }
-        else if (player.weapon === 2 && shotgun.ammo != 0) {
+        else if (player.weapon === 2 && shotgun.ammo != 0 && player.shotgunSlowTimeoutId === null) {
             shotgun.ammo -= 1;
             for (let i = 0; i < shotgun.bullet_amount; i++) {
                 shotgun_bullets.push({

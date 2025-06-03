@@ -156,17 +156,21 @@ function draw_player() {
 }
 
 function move_assault_rife_bullets() {
-    for (let bullet of assault_rife_bullets) {
-        bullet.world_x += Math.floor(Math.cos(bullet.angle) * assault_rife.speed);
-        bullet.world_y += Math.floor(Math.sin(bullet.angle) * assault_rife.speed);
+    for (let i = assault_rife_bullets.length - 1; i >= 0; i--) {
+        let bullet = assault_rife_bullets[i];
+        bullet.world_x += Math.cos(bullet.angle) * assault_rife.speed;
+        bullet.world_y += Math.sin(bullet.angle) * assault_rife.speed;
+        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height) {
+            assault_rife_bullets.splice(i, 1);
+        }
     }
 }
 
 function draw_assault_rife_bullets() {
     for (let bullet of assault_rife_bullets) {
         ctx.save();
-        ctx.translate(bullet.world_x, bullet.world_y);
-        ctx.rotate(bullet.angle);
+        ctx.translate(bullet.world_x - position_x + canvas.width / 2, bullet.world_y - position_y + canvas.height / 2);
+        ctx.rotate(bullet.angle - Math.PI/2);
         ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
         ctx.restore();
     }

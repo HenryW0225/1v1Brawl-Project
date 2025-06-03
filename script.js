@@ -34,8 +34,8 @@ let player = {
 let assault_rife = {
     damage: 5,
     ammo: 30,
-    width: 4,
-    height: 8,
+    width: 15,
+    height: 30,
     speed: 15
 }
 
@@ -204,7 +204,7 @@ window.addEventListener("mousedown", () => {
         assault_rife_bullets.push({
             world_x: player.world_x,
             world_y: player.world_y,
-            angle: player.angle
+            angle: player.angle + Math.PI/2
         })
     }
 });

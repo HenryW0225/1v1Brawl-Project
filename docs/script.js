@@ -1,5 +1,3 @@
-//const socket = io();
-
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -132,7 +130,7 @@ images.originalworldmapImg.onload = () => {
 
 function background_map() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // clamp camera to stay within world bounds
+
     const camX = Math.max(Math.min(player.world_x, world_width - canvas.width / 2), canvas.width / 2);
     const camY = Math.max(Math.min(player.world_y, world_height - canvas.height / 2), canvas.height / 2);
     ctx.drawImage(WorldMap, camX - canvas.width / 2, camY - canvas.height / 2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);

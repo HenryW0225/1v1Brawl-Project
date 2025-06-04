@@ -18,8 +18,8 @@ let WorldMap;
 canvas.width = 1250;
 canvas.height = 750;
 
-const world_width = canvas.width * 2;
-const world_height = canvas.height * 2;
+let world_width = canvas.width*2;
+let world_height = canvas.height*2;
 
 let player = {
     world_x: 250,
@@ -32,18 +32,18 @@ let player = {
     arSlowTimeoutId: null,
     shotgunSlowTimeoutId: null,
     weapon: 1
-};
+}
 
-let assault_rifle = {
+let assault_rife = {
     damage: 5,
     ammo: 30,
     width: 15,
     height: 30,
     speed: 20,
     range: 60
-};
+}
 
-let assault_rifle_bullets = [];
+let assault_rife_bullets = [];
 
 let shotgun = {
     damage: 5,
@@ -54,14 +54,18 @@ let shotgun = {
     height: 20,
     speed: 25,
     range: 20
-};
+}
 
 let shotgun_bullets = [];
 
 let isReloading = false;
 let reloadTimeoutId = null;
 
+
 let keys = {};
+
+let position_x = 0;
+let position_y = 0;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -76,7 +80,8 @@ createBtn.addEventListener("click", () => {
     const name = usernameInput.value.trim();
     if (name !== "") {
         playerName = name;
-        socket.emit("createRoom", { name });
+        document.getElementById("startMenu").style.display = "none";
+        loading_page();
     } else {
         alert("Please enter a username");
     }
@@ -119,6 +124,7 @@ startBtn.addEventListener("click", () => {
     gameLoop();
 });
 
+
 images.originalworldmapImg.onload = () => {
     const offscreen = document.createElement("canvas");
     offscreen.width = world_width;
@@ -128,17 +134,17 @@ images.originalworldmapImg.onload = () => {
     WorldMap = offscreen;
 };
 
+
 function background_map() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const camX = Math.max(Math.min(player.world_x, world_width - canvas.width / 2), canvas.width / 2);
-    const camY = Math.max(Math.min(player.world_y, world_height - canvas.height / 2), canvas.height / 2);
-    ctx.drawImage(WorldMap, camX - canvas.width / 2, camY - canvas.height / 2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-    return { camX, camY };
+    position_x = Math.max(Math.min(player.world_x, world_width - canvas.width/2), canvas.width/2);
+    position_y = Math.max(Math.min(player.world_y, world_height - canvas.height/2), canvas.height/2);
+    ctx.drawImage(WorldMap, position_x - canvas.width/2, position_y - canvas.height/2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 }
 
 function move_player() {
-    let dx = 0, dy = 0;
+    let dx = 0;
+    let dy = 0;
     if (keys["KeyA"]) dx -= 1;
     if (keys["KeyD"]) dx += 1;
     if (keys["KeyW"]) dy -= 1;
@@ -149,20 +155,23 @@ function move_player() {
         dx = (dx / length) * player.speed;
         dy = (dy / length) * player.speed;
     }
-    player.world_x = Math.max(0, Math.min(world_width, player.world_x + dx));
-    player.world_y = Math.max(0, Math.min(world_height, player.world_y + dy));
+    player.world_x += dx;
+    player.world_y += dy;
+
+    player.world_x = Math.max(0, Math.min(world_width, player.world_x));
+    player.world_y = Math.max(0, Math.min(world_height, player.world_y));
 }
 
-function draw_player(camX, camY) {
-    const offsetX = player.world_x - camX + canvas.width / 2;
-    const offsetY = player.world_y - camY + canvas.height / 2;
+function draw_player() {
+    const offsetX = player.world_x - position_x + canvas.width / 2;
+    const offsetY = player.world_y - position_y + canvas.height / 2;
 
-    const worldMouseX = mouseX + camX - canvas.width / 2;
-    const worldMouseY = mouseY + camY - canvas.height / 2;
+    const worldMouseX = mouseX + position_x - canvas.width / 2;
+    const worldMouseY = mouseY + position_y - canvas.height / 2;
 
     const dx = worldMouseX - player.world_x;
     const dy = worldMouseY - player.world_y;
-    player.angle = Math.atan2(dy, dx) + Math.PI / 2;
+    player.angle = Math.atan2(dy, dx) + Math.PI/2;
 
     ctx.save();
     ctx.translate(offsetX, offsetY);
@@ -171,66 +180,54 @@ function draw_player(camX, camY) {
     ctx.restore();
 }
 
-function move_assault_rifle_bullets() {
-    for (let i = assault_rifle_bullets.length - 1; i >= 0; i--) {
-        const bullet = assault_rifle_bullets[i];
-        bullet.distance++;
-        bullet.world_x += Math.cos(bullet.angle) * assault_rifle.speed;
-        bullet.world_y += Math.sin(bullet.angle) * assault_rifle.speed;
-        if (
-            bullet.world_x < 0 || bullet.world_x > world_width ||
-            bullet.world_y < 0 || bullet.world_y > world_height ||
-            bullet.distance > assault_rifle.range
-        ) {
-            assault_rifle_bullets.splice(i, 1);
+function move_assault_rife_bullets() {
+    for (let i = assault_rife_bullets.length - 1; i >= 0; i--) {
+        let bullet = assault_rife_bullets[i];
+        bullet.distance += 1;
+        bullet.world_x += Math.cos(bullet.angle) * assault_rife.speed;
+        bullet.world_y += Math.sin(bullet.angle) * assault_rife.speed;
+        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height || bullet.distance > assault_rife.range) {
+            assault_rife_bullets.splice(i, 1);
         }
     }
 }
 
-function draw_assault_rifle_bullets(camX, camY) {
-    for (const bullet of assault_rifle_bullets) {
-        const offsetX = bullet.world_x - camX + canvas.width / 2;
-        const offsetY = bullet.world_y - camY + canvas.height / 2;
+function draw_assault_rife_bullets() {
+    for (let bullet of assault_rife_bullets) {
         ctx.save();
-        ctx.translate(offsetX, offsetY);
-        ctx.rotate(bullet.angle - Math.PI / 2);
-        ctx.drawImage(images.assaultrifebulletImg, -assault_rifle.width / 2, -assault_rifle.height / 2, assault_rifle.width, assault_rifle.height);
+        ctx.translate(bullet.world_x, bullet.world_y);
+        ctx.rotate(bullet.angle - Math.PI/2);
+        ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
         ctx.restore();
     }
 }
 
-function assault_rifle_slow() {
+function assault_rife_slow() {
     player.speed = 2;
     clearTimeout(player.arSlowTimeoutId);
     player.arSlowTimeoutId = setTimeout(() => {
         player.speed = 5;
-    }, 300);
+    }, 300); 
 }
 
 function move_shotgun_bullets() {
     for (let i = shotgun_bullets.length - 1; i >= 0; i--) {
-        const bullet = shotgun_bullets[i];
-        bullet.distance++;
+        let bullet = shotgun_bullets[i];
+        bullet.distance += 1;
         bullet.world_x += Math.cos(bullet.angle) * shotgun.speed;
         bullet.world_y += Math.sin(bullet.angle) * shotgun.speed;
-        if (
-            bullet.world_x < 0 || bullet.world_x > world_width ||
-            bullet.world_y < 0 || bullet.world_y > world_height ||
-            bullet.distance > shotgun.range
-        ) {
+        if (bullet.world_x < 0 || bullet.world_x > world_width || bullet.world_y < 0 || bullet.world_y > world_height || bullet.distance > shotgun.range) {
             shotgun_bullets.splice(i, 1);
         }
     }
 }
 
-function draw_shotgun_bullets(camX, camY) {
-    for (const bullet of shotgun_bullets) {
-        const offsetX = bullet.world_x - camX + canvas.width / 2;
-        const offsetY = bullet.world_y - camY + canvas.height / 2;
+function draw_shotgun_bullets() {
+    for (let bullet of shotgun_bullets) {
         ctx.save();
-        ctx.translate(offsetX, offsetY);
-        ctx.rotate(bullet.angle - Math.PI / 2);
-        ctx.drawImage(images.assaultrifebulletImg, -assault_rifle.width / 2, -assault_rifle.height / 2, assault_rifle.width, assault_rifle.height);
+        ctx.translate(bullet.world_x, bullet.world_y);
+        ctx.rotate(bullet.angle - Math.PI/2);
+        ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
         ctx.restore();
     }
 }
@@ -238,102 +235,107 @@ function draw_shotgun_bullets(camX, camY) {
 function shotgun_slow() {
     player.speed = 2;
     clearTimeout(player.shotgunSlowTimeoutId);
-    player.shotgunSlowTimeoutId = setTimeout(() => {
+    player.shotgunSlowTimeoutId = setTimeout (() => {
         player.speed = 5;
         player.shotgunSlowTimeoutId = null;
     }, 1000);
 }
 
 function gameLoop() {
-    document.getElementById("arAmmo").textContent = assault_rifle.ammo;
-    document.getElementById("sgAmmo").textContent = shotgun.ammo;
+    document.getElementById("arAmmo").textContent = assault_rife.ammo;
+    document.getElementById("sgAmmo").textContent = shotgun.ammo; 
 
-    const { camX, camY } = (() => {
-        const x = Math.max(Math.min(player.world_x, world_width - canvas.width / 2), canvas.width / 2);
-        const y = Math.max(Math.min(player.world_y, world_height - canvas.height / 2), canvas.height / 2);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(WorldMap, x - canvas.width / 2, y - canvas.height / 2, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-        return { camX: x, camY: y };
-    })();
-
+    background_map();
     move_player();
     move_shotgun_bullets();
-    move_assault_rifle_bullets();
+    draw_shotgun_bullets();
+    move_assault_rife_bullets();
+    draw_assault_rife_bullets();
+    draw_player();
 
-    draw_shotgun_bullets(camX, camY);
-    draw_assault_rifle_bullets(camX, camY);
-    draw_player(camX, camY);
 
     requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener("keydown", (event) => {
+
+document.addEventListener("keydown", function(event) {
     keys[event.code] = true;
-
-    if (event.code === "KeyR" && !gameOver && !isReloading) {
-        if (player.weapon === 1 && assault_rifle.ammo < 30) {
-            isReloading = true;
-            reloadTimeoutId = setTimeout(() => {
-                assault_rifle.ammo = 30;
-                isReloading = false;
-                reloadTimeoutId = null;
-            }, 2000);
-        } else if (player.weapon === 2 && shotgun.ammo < 5) {
-            isReloading = true;
-            reloadTimeoutId = setTimeout(() => {
-                shotgun.ammo = 5;
-                isReloading = false;
-                reloadTimeoutId = null;
-            }, 3000);
-        }
-    }
-
-    if (event.code === "Digit1") {
-        player.weapon = 1;
-    }
-    if (event.code === "Digit2") {
-        player.weapon = 2;
-    }
 });
 
-document.addEventListener("keyup", (event) => {
+document.addEventListener("keyup", function(event) {
     keys[event.code] = false;
 });
 
-canvas.addEventListener("mousedown", (e) => {
-    if (gameOver || isReloading) return;
+document.addEventListener("keydown", function(event) {
+    if (event.code === "KeyR" && !gameOver && !isReloading) {
+        if (player.weapon === 1 && assault_rife.ammo < 30) {
+            isReloading = true;
+            reloadTimeoutId = setTimeout(() => {
+                assault_rife.ammo = 30;
+                isReloading = false;
+                reloadTimeoutId = null;
+            }, 2000);
+        }
+        else if (player.weapon === 2 && shotgun.ammo < 5) {
+            isReloading = true;
+            reloadTimeoutId = setTimeout(() => {
+                shotgun.ammo += 1;
+                isReloading = false;
+                reloadTimeoutId = null;
+            }, 750);
+        }
+    }
+});
 
-    if (player.weapon === 1 && assault_rifle.ammo > 0) {
-        assault_rifle.ammo--;
-        assault_rifle_slow();
+document.addEventListener("keydown", function(event) {
+    if (event.code === "Digit1" && player.weapon != 1) {
+        player.speed = 5;
+        clearTimeout(reloadTimeoutId);
+        isReloading = false;
+        reloadTimeoutId = null;
+        player.weapon = 1;
+        clearTimeout(player.shotgunSlowTimeoutId);
+    } 
+    else if (event.code === "Digit2" && player.weapon != 2) {
+        player.speed = 5;
+        clearTimeout(reloadTimeoutId);
+        isReloading = false;
+        reloadTimeoutId = null;
+        player.weapon = 2;
+        clearTimeout(player.arSlowTimeoutId);
+    }
+});
 
-        const worldMouseX = mouseX + player.world_x - canvas.width / 2;
-        const worldMouseY = mouseY + player.world_y - canvas.height / 2;
-        const angle = Math.atan2(worldMouseY - player.world_y, worldMouseX - player.world_x);
-
-        assault_rifle_bullets.push({
-            world_x: player.world_x,
-            world_y: player.world_y,
-            angle,
-            distance: 0
-        });
-
-    } else if (player.weapon === 2 && shotgun.ammo > 0) {
-        shotgun.ammo--;
-        shotgun_slow();
-
-        const worldMouseX = mouseX + player.world_x - canvas.width / 2;
-        const worldMouseY = mouseY + player.world_y - canvas.height / 2;
-        const baseAngle = Math.atan2(worldMouseY - player.world_y, worldMouseX - player.world_x);
-
-        for (let i = 0; i < shotgun.bullet_amount; i++) {
-            const spreadAngle = baseAngle + (Math.random() * 2 - 1) * shotgun.spread;
-            shotgun_bullets.push({
-                world_x: player.world_x,
-                world_y: player.world_y,
-                angle: spreadAngle,
+window.addEventListener("mousedown", () => {
+    if (!gameOver) {
+        if (player.weapon === 1 && assault_rife.ammo != 0) {
+            if (isReloading) {
+                clearTimeout(reloadTimeoutId);
+                isReloading = false;
+                reloadTimeoutId = null;
+            }
+            assault_rife.ammo -= 1;
+            assault_rife_bullets.push({
+                world_x: player.world_x - position_x + canvas.width / 2,
+                world_y: player.world_y - position_y + canvas.height / 2,
+                angle: player.angle - Math.PI/2,
                 distance: 0
-            });
+            })
+
+            assault_rife_slow();
+        }
+        else if (player.weapon === 2 && shotgun.ammo != 0 && player.shotgunSlowTimeoutId === null) {
+            shotgun.ammo -= 1;
+            for (let i = 0; i < shotgun.bullet_amount; i++) {
+                shotgun_bullets.push({
+                    world_x: player.world_x - position_x + canvas.width / 2,
+                    world_y: player.world_y - position_y + canvas.height / 2,
+                    angle: player.angle + Math.random() * shotgun.spread - shotgun.spread/2 - Math.PI/2,
+                    distance: 0
+                })
+            }
+
+            shotgun_slow();
         }
     }
 });

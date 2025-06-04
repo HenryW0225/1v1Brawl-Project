@@ -178,7 +178,6 @@ function draw_player() {
     ctx.rotate(player.angle);
     ctx.drawImage(images.playerImg, -player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
-
 }
 
 function move_assault_rife_bullets() {
@@ -239,7 +238,7 @@ function shotgun_slow() {
     player.shotgunSlowTimeoutId = setTimeout (() => {
         player.speed = 5;
         player.shotgunSlowTimeoutId = null;
-    }, 750);
+    }, 1000);
 }
 
 function gameLoop() {

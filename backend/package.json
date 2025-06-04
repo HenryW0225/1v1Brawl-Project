@@ -1,0 +1,24 @@
+{
+  "name": "1v1game-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "images.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenryW0225/1v1Game-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HenryW0225/1v1Game-Project/issues"
+  },
+  "homepage": "https://github.com/HenryW0225/1v1Game-Project#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  }
+}

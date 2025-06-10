@@ -6,6 +6,7 @@ import * as constants from './constants.js';
 let gameOver = true;
 
 export function reset_game() {
+    //reset all other necessary things per match
     gameOver = false;
 }
 
@@ -13,7 +14,7 @@ export function game_loop() {
     if (gameOver) {
         return;
     }
-    
+
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
 

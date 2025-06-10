@@ -99,11 +99,10 @@ export function weapons_reload() {
             if (shotgun.ammo >= 5) {
                 cancelReload();
             }
-        }, 750);
+        }, 1000);
     }
 }
 
-// Switch weapons
 export function switch_weapons() {
     if (input.keys["Digit1"] && constants.player.weapon !== 1) {
         cancelReload();

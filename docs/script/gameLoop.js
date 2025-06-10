@@ -8,9 +8,9 @@ export let gameOver = true;
 export function game_loop() {
     /*document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; */
-    if (gameOver) {
+    /*if (gameOver) {
         return;
-    }
+    }*/
     constants.ctx.fillStyle = "black";
     constants.ctx.fillRect(0, 0, constants.ctx_width, constants.ctx_height);
     //layout.background_map();

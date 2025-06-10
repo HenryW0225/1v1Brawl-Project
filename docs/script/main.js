@@ -17,7 +17,7 @@ startUI.enterBtn.addEventListener("click", () => {
 
 startUI.startBtn.addEventListener("click", () => {
     startUI.start_button();
-    gameLoop.gameOver = false;
+    //gameLoop.gameOver = false;
     gameLoop.game_loop();
     /*if (images.originalworldmapImg.complete) {
         layout.create_worldmap();

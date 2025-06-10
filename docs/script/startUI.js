@@ -42,7 +42,7 @@ export function enter_button() {
 
 export function start_button() {
     document.getElementById("loadingPage").style.display = "none";
-    document.getElementById("gameContainer").style.display = "block";
+    document.getElementById("gameContainer").style.display = "flex";
 }
 
 function loading_page() {

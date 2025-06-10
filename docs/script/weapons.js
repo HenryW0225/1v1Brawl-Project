@@ -41,7 +41,7 @@ export function fire_assault_rife() {
         input.canFire = false;
         assault_rife.ammo -= 1;
         assault_rife_bullets.push({
-            world_x: constants.player.player.world_x - constants.players.position_x + constants.ctx_width / 2,
+            world_x: constants.player.world_x - constants.position_x + constants.ctx_width / 2,
             world_y: constants.player.world_y - constants.position_y + constants.ctx_height / 2,
             angle: constants.player.angle - Math.PI/2,
             distance: 0
@@ -61,7 +61,7 @@ export function fire_shotgun() {
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             shotgun_bullets.push({
                 world_x: constants.player.world_x - constants.position_x + constants.ctx_width / 2,
-                world_y: constants.player.world_y - constants.position_y + constant.ctx_height / 2,
+                world_y: constants.player.world_y - constants.position_y + constants.ctx_height / 2,
                 angle: constants.player.angle + Math.random() * shotgun.spread - shotgun.spread/2 - Math.PI/2,
                 distance: 0
             })
@@ -98,7 +98,7 @@ function draw_assault_rife_bullets() {
         constants.ctx.save();
         constants.ctx.translate(bullet.world_x, bullet.world_y);
         constants.ctx.rotate(bullet.angle - Math.PI/2);
-        constants.ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
+        constants.ctx.drawImage(images.bulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
         constants.ctx.restore();
     }
 }
@@ -128,7 +128,7 @@ function draw_shotgun_bullets() {
         constants.ctx.save();
         constants.ctx.translate(bullet.world_x, bullet.world_y);
         constants.ctx.rotate(bullet.angle - Math.PI/2);
-        constants.ctx.drawImage(images.assaultrifebulletImg, -assault_rife.width/2, -assault_rife.height/2, assault_rife.width, assault_rife.height);
+        constants.ctx.drawImage(images.bulletImg, -shotgun.width/2, -shotgun.height/2, shotgun.width, shotgun.height);
         constants.ctx.restore();
     }
 }
@@ -142,7 +142,7 @@ function shotgun_slow() {
 }
 
 export function switch_weapons() {
-    if (input.keys[Digit1] && constants.player.weapon != 1) {
+    if (input.keys["Digit1"] && constants.player.weapon != 1) {
         constants.player.speed = 5;
         clearTimeout(reloadTimeoutId);
         isReloading = false;
@@ -150,7 +150,7 @@ export function switch_weapons() {
         constants.player.weapon = 1;
         clearTimeout(shotgunSlowTimeoutId);
     } 
-    else if (input.keys[Digit2] && constants.player.weapon != 2) {
+    else if (input.keys["Digit2"] && constants.player.weapon != 2) {
         constants.player.speed = 5;
         clearTimeout(reloadTimeoutId);
         isReloading = false;
@@ -161,7 +161,7 @@ export function switch_weapons() {
 }
 
 export function weapons_reload() {
-    if (input.keys[KeyR] && !isReloading) {
+    if (input.keys["KeyR"] && !isReloading) {
         if (constants.player.weapon === 1 && assault_rife.ammo < 30) {
             isReloading = true;
             reloadTimeoutId = setTimeout(() => {

@@ -10,8 +10,8 @@ export function create_worldmap() {
     //use to create additional stuff to map
 
     const offscreen = document.createElement("canvas");
-    offscreen.width = world_width;
-    offscreen.height = world_height;
+    offscreen.width = constants.world_width;
+    offscreen.height = constants.world_height;
     const offCtx = offscreen.getContext("2d");
     offCtx.drawImage(images.originalworldmapImg, 0, 0, constants.world_width, constants.world_height);
     layout.WorldMap = offscreen;

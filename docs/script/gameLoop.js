@@ -11,7 +11,7 @@ export function create_worldmap() {
     const img = images.originalworldmapImg;
 
     if (!img.complete) {
-        img.onload = () => create_worldmap(); // retry once loaded
+        img.onload = () => create_worldmap(); 
         return;
     }
 

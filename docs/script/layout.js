@@ -1,6 +1,6 @@
 import * as constants from './constants.js';
 
-export let WorldMap;
+export const WorldMap = new Image();
 
 export function background_map() {
     constants.ctx.clearRect(0, 0, constants.ctx_width, constants.ctx_height);

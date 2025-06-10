@@ -1,30 +1,8 @@
 import * as weapons from './weapons.js';
 import * as players from './players.js';
 import * as layout from './layout.js';
-import * as images from './images.js';
-import * as constants from './constants.js';
 
 export let gameOver = true;
-
-export function create_worldmap() {
-    //use to create other stuff on the map
-    const img = images.originalworldmapImg;
-
-    if (!img.complete) {
-        img.onload = () => create_worldmap(); 
-        return;
-    }
-
-    const offscreen = document.createElement("canvas");
-    offscreen.width = constants.world_width;
-    offscreen.height = constants.world_height;
-
-    const offCtx = offscreen.getContext("2d");
-    offCtx.drawImage(img, 0, 0, constants.world_width, constants.world_height);
-
-    layout.WorldMap = offscreen;
-}
-
 
 export function game_Loop() {
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;

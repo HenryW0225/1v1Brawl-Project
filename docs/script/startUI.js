@@ -54,11 +54,3 @@ function enter_code_page() {
     document.getElementById("enterCodePage").style.display = "block";
 }
 
-export function loading_page() {
-    document.getElementById("roomCode").textContent = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-    document.getElementById("loadingPage").style.display = "block";
-}
-
-export function enter_code_page() {
-    document.getElementById("enterCodePage").style.display = "block";
-}

@@ -5,7 +5,7 @@ import * as constants from './constants.js';
 
 export let gameOver = true;
 
-export function game_Loop() {
+export function game_loop() {
     /*document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; */
 
@@ -23,5 +23,5 @@ export function game_Loop() {
     players.draw_player();*/
 
 
-    requestAnimationFrame(game_Loop);
+    requestAnimationFrame(game_loop);
 }

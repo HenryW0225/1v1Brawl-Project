@@ -17,7 +17,9 @@ startUI.enterBtn.addEventListener("click", () => {
 
 startUI.startBtn.addEventListener("click", () => {
     startUI.start_button();
-    if (images.originalworldmapImg.complete) {
+    gameLoop.gameOver = false;
+    gameLoop.game_loop();
+    /*if (images.originalworldmapImg.complete) {
         layout.create_worldmap();
         gameLoop.game_loop();
     } else {
@@ -25,7 +27,7 @@ startUI.startBtn.addEventListener("click", () => {
             layout.create_worldmap();
             gameLoop.game_loop();
         };
-    }
+    }*/
 });
 
 

@@ -4,7 +4,7 @@ import * as layout from './layout.js';
 import * as images from './images.js';
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
 
-const socket = io(window.location.hostname.includes('localhost') ? 'http://localhost:3000' : 'https://yourbackenddomain.com');
+const socket = io('https://onev1brawl-project.onrender.com');
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();

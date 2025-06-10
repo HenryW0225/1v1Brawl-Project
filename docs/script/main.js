@@ -2,6 +2,9 @@ import * as gameLoop from './gameLoop.js';
 import * as startUI from './startUI.js';
 import * as layout from './layout.js';
 import * as images from './images.js';
+import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
+
+export const socket = io('http://localhost:3000'); 
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();
@@ -29,5 +32,22 @@ startUI.startBtn.addEventListener("click", () => {
     }
 });
 
+socket.on('room-created', ({ roomCode, players }) => {
+    startUI.updateRoomCode(roomCode);
+    startUI.updatePlayers(players);
+    startUI.showLoadingPage();
+});
 
+socket.on('room-joined', ({ roomCode, players }) => {
+    startUI.updateRoomCode(roomCode);
+    startUI.updatePlayers(players);
+    startUI.showLoadingPage();
+});
 
+socket.on('room-error', (msg) => {
+    alert(msg);
+});
+
+socket.on('player-list-updated', (players) => {
+    startUI.updatePlayers(players);
+});

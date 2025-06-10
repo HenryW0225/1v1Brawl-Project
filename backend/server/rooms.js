@@ -2,15 +2,15 @@ import { nanoid } from 'nanoid';
 
 const rooms = {};
 
-export function createRoom(socketId) {
+export function createRoom(socketId, username) {
     const roomCode = nanoid(5).toUpperCase();
-    rooms[roomCode] = [socketId];
+    rooms[roomCode] = [{ id: socketId, name: username }];
     return roomCode;
 }
 
-export function joinRoom(roomCode, socketId) {
+export function joinRoom(roomCode, socketId, username) {
     if (rooms[roomCode] && rooms[roomCode].length < 2) {
-        rooms[roomCode].push(socketId);
+        rooms[roomCode].push({ id: socketId, name: username });
         return true;
     }
     return false;

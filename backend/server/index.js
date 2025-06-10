@@ -4,6 +4,8 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import { createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 app.use(cors());
 
@@ -15,41 +17,35 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    socket.on('create-room', () => {
-        const roomCode = createRoom(socket.id);
+    socket.on('create-room', ({ username }) => {
+        const roomCode = createRoom(socket.id, username);
         socket.join(roomCode);
-        socket.emit('room-created', roomCode);
+        io.to(roomCode).emit('room-created', { roomCode, players: rooms[roomCode] });
         console.log(`Room ${roomCode} created by ${socket.id}`);
     });
-
-    socket.on('join-room', (roomCode) => {
-        const success = joinRoom(roomCode, socket.id);
+    
+    socket.on('join-room', ({ roomCode, username }) => {
+        const success = joinRoom(roomCode, socket.id, username);
         if (success) {
             socket.join(roomCode);
-            socket.emit('room-joined', roomCode);
+            io.to(roomCode).emit('room-joined', { roomCode, players: rooms[roomCode] });
             io.to(roomCode).emit('start-game');
             console.log(`${socket.id} joined room ${roomCode}`);
         } else {
             socket.emit('room-error', 'Room full or does not exist');
         }
     });
-
-    socket.on('player-action', (data) => {
-        const room = getRoom(socket.id);
-        if (room) {
-            socket.to(room).emit('opponent-action', data);
-        }
-    });
-
+    
     socket.on('disconnect', () => {
-        const room = leaveRoom(socket.id);
-        if (room) {
-            io.to(room).emit('opponent-left');
-            console.log(`${socket.id} left room ${room}`);
+        const roomCode = leaveRoom(socket.id);
+        if (roomCode) {
+            io.to(roomCode).emit('opponent-left');
+            console.log(`${socket.id} left room ${roomCode}`);
+            io.to(roomCode).emit('player-list-updated', rooms[roomCode]?.map(p => ({ name: p.name })) || []);
         }
-    });
+    });    
 });
 
-server.listen(3000, () => {
-    console.log('Server running on port 3000');
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

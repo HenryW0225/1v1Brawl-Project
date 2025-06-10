@@ -7,15 +7,24 @@ import * as constants from './constants.js';
 export let gameOver = true;
 
 export function create_worldmap() {
-    //use to create additional stuff to map
+    //use to create other stuff on the map
+    const img = images.originalworldmapImg;
+
+    if (!img.complete) {
+        img.onload = () => create_worldmap(); // retry once loaded
+        return;
+    }
 
     const offscreen = document.createElement("canvas");
     offscreen.width = constants.world_width;
     offscreen.height = constants.world_height;
+
     const offCtx = offscreen.getContext("2d");
-    offCtx.drawImage(images.originalworldmapImg, 0, 0, constants.world_width, constants.world_height);
+    offCtx.drawImage(img, 0, 0, constants.world_width, constants.world_height);
+
     layout.WorldMap = offscreen;
 }
+
 
 export function game_Loop() {
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;

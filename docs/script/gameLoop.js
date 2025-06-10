@@ -4,10 +4,6 @@ import * as layout from './layout.js';
 
 export let gameOver = true;
 
-export function create_Worldmap() {
-    layout.create_WorldMap();
-}
-
 export function game_Loop() {
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 

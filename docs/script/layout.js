@@ -3,7 +3,7 @@ import * as images from './images.js';
 
 let WorldMap;
 
-export function create_WorldMap() {
+export function create_Worldmap() {
     const offscreen = document.createElement("canvas");
     offscreen.width = constants.world_width;
     offscreen.height = constants.world_height;

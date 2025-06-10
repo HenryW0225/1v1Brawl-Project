@@ -10,13 +10,13 @@ export function reset_game() {
 }
 
 export function game_loop() {
-    /*document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
-    document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; */
-    /*if (gameOver) {
+    document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
+    document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
+    if (gameOver) {
         return;
-    }*/
+    }
     layout.background_map();
-    /*players.move_player();
+    players.move_player();
     weapons.switch_weapons();
     weapons.weapons_reload();
     if (constants.player.weapon === 1) {
@@ -26,7 +26,7 @@ export function game_loop() {
     }
     weapons.game_assault_rife();
     weapons.game_shotgun();
-    players.draw_player();*/
+    players.draw_player();
 
 
     requestAnimationFrame(game_loop);

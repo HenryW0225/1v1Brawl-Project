@@ -41,8 +41,8 @@ export function fire_assault_rife() {
         input.canFire = false;
         assault_rife.ammo -= 1;
         assault_rife_bullets.push({
-            world_x: constants.player.world_x - constants.position_x + constants.ctx_width / 2,
-            world_y: constants.player.world_y - constants.position_y + constants.ctx_height / 2,
+            world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2,
+            world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2,
             angle: constants.player.angle - Math.PI/2,
             distance: 0
         })
@@ -60,8 +60,8 @@ export function fire_shotgun() {
         shotgun.ammo -= 1;
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             shotgun_bullets.push({
-                world_x: constants.player.world_x - constants.position_x + constants.ctx_width / 2,
-                world_y: constants.player.world_y - constants.position_y + constants.ctx_height / 2,
+                world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2,
+                world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2,
                 angle: constants.player.angle + Math.random() * shotgun.spread - shotgun.spread/2 - Math.PI/2,
                 distance: 0
             })

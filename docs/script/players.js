@@ -23,11 +23,11 @@ export function move_player() {
 }
 
 export function draw_player() {
-    const offsetX = constants.player.world_x - constants.position_x + constants.ctx_width / 2;
-    const offsetY = constants.player.world_y - constants.position_y + constants.ctx_height / 2;
+    const offsetX = constants.player.world_x - constants.player.position_x + constants.ctx_width / 2;
+    const offsetY = constants.player.world_y - constants.player.position_y + constants.ctx_height / 2;
 
-    const worldMouseX = input.mouseX + constants.position_x - constants.ctx_width / 2;
-    const worldMouseY = input.mouseY + constants.position_y - constants.ctx_height / 2;
+    const worldMouseX = input.mouseX + constants.player.position_x - constants.ctx_width / 2;
+    const worldMouseY = input.mouseY + constants.player.position_y - constants.ctx_height / 2;
 
     const dx = worldMouseX - constants.player.world_x;
     const dy = worldMouseY - constants.player.world_y;

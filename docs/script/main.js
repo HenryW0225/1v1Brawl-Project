@@ -4,7 +4,7 @@ import * as layout from './layout.js';
 import * as images from './images.js';
 import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
 
-export const socket = io('http://localhost:3000'); 
+const socket = io(window.location.hostname.includes('localhost') ? 'http://localhost:3000' : 'https://yourbackenddomain.com');
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();

@@ -175,7 +175,6 @@ export function weapons_reload() {
             isReloading = true;
             for (let i = shotgun.ammo; i < 5; i++) {
                 reloadTimeoutId = setTimeout(() => {
-                    i += 1;
                     shotgun.ammo += 1;
                     isReloading = false;
                     reloadTimeoutId = null;

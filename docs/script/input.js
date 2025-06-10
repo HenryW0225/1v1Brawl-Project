@@ -1,8 +1,13 @@
+const canvas = document.getElementById("gameCanvas");
+
 export let mouseX = 0;
 export let mouseY = 0;
 export const keys = {};
-export let mouseDown = false;
-export let canFire = true;
+
+export let firing = {
+    mouseDown: false,
+    canFire: true
+}
 
 window.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
@@ -19,10 +24,10 @@ window.addEventListener("keyup", function(event) {
 });
 
 window.addEventListener("mousedown", () => {
-    mouseDown = true;
+    firing.mouseDown = true;
 });
 
 window.addEventListener("mouseup", () => {
-    mouseDown = false;
-    canFire = true;
+    firing.mouseDown = false;
+    firing.canFire = true;
 });

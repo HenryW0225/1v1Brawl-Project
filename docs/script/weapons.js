@@ -32,13 +32,13 @@ let arSlowTimeoutId = null;
 let shotgunSlowTimeoutId = null;
 
 export function fire_assault_rife() {
-    if (input.mouseDown && assault_rife.ammo != 0 && input.canFire) {
+    if (input.firing.mouseDown === true && assault_rife.ammo != 0 && input.firing.canFire === true) {
         if (isReloading) {
             clearTimeout(reloadTimeoutId);
             isReloading = false;
             reloadTimeoutId = null;
         }
-        input.canFire = false;
+        input.firing.canFire = false;
         assault_rife.ammo -= 1;
         assault_rife_bullets.push({
             world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2,
@@ -51,12 +51,13 @@ export function fire_assault_rife() {
     }
 }
 export function fire_shotgun() {
-    if (input.mouseDown && shotgun.ammo != 0 && input.canFire) {
+    if (input.firing.mouseDown === true && shotgun.ammo != 0 && input.firing.canFire === true) {
         if (isReloading) {
             clearTimeout(reloadTimeoutId);
             isReloading = false;
             reloadTimeoutId = null;
         }
+        input.firing.canFire = false;
         shotgun.ammo -= 1;
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             shotgun_bullets.push({

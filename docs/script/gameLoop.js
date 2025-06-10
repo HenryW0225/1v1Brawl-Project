@@ -1,6 +1,7 @@
 import * as weapons from './weapons.js';
 import * as players from './players.js';
 import * as layout from './layout.js';
+import * as constants from './constants.js';
 
 export let gameOver = true;
 
@@ -12,7 +13,7 @@ export function game_Loop() {
     players.move_player();
     weapons.switch_weapons();
     weapons.weapons_reload();
-    if (players.player.weapon === 1) {
+    if (constants.player.weapon === 1) {
         weapons.fire_assault_rife();
     } else {
         weapons.fire_shotgun();

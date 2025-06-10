@@ -2,9 +2,8 @@ import * as gameLoop from './gameLoop.js';
 import * as startUI from './startUI.js';
 import * as layout from './layout.js';
 import * as images from './images.js';
-import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
+import { socket } from './socket.js';
 
-const socket = io('https://onev1brawl-project.onrender.com');
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();

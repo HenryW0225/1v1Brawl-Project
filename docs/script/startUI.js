@@ -1,11 +1,11 @@
-import { socket } from './main.js'; 
-
 export const createBtn = document.getElementById("createBtn");
 export const joinBtn = document.getElementById("joinBtn");
 export const usernameInput = document.getElementById("usernameInput");
 export const enterBtn = document.getElementById("enterBtn");
 export const codeInput = document.getElementById("codeInput");
 export const startBtn = document.getElementById("startBtn");
+
+import { socket } from './socket.js';
 
 let playerName = "";
 let currentRoomCode = null;

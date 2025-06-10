@@ -2,7 +2,7 @@ import * as images from './images.js';
 import * as input from './input.js';
 import * as constants from './constants.js';
 
-let assault_rife = {
+export let assault_rife = {
     damage: 5,
     ammo: 30,
     width: 15,
@@ -13,7 +13,7 @@ let assault_rife = {
 
 let assault_rife_bullets = [];
 
-let shotgun = {
+export let shotgun = {
     damage: 5,
     ammo: 5,
     bullet_amount: 6,

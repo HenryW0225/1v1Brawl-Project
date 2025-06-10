@@ -8,7 +8,7 @@ export let gameOver = true;
 export function game_Loop() {
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
-
+    
     layout.background_map();
     /*players.move_player();
     weapons.switch_weapons();

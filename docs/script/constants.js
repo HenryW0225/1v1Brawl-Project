@@ -10,12 +10,11 @@ export let ctx_height = canvas.height;
 export let world_width = canvas.width*2;
 export let world_height = canvas.height*2;
 
-export let position_x = 0;
-export let position_y = 0;
-
 export let player = {
     world_x: 250,
     world_y: canvas.height,
+    position_x: 0,
+    position_y: 0,
     angle: 0,
     width: 50,
     height: 50,

@@ -53,9 +53,9 @@ export function fire_assault_rife() {
 
         socket.emit('fire-ar', { 
             roomCode: session.roomCode, 
-            world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2, 
-            world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2, 
-            angle: constants.player.angle - Math.PI / 2, 
+            world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2, 
+            world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2, 
+            angle: session.player.angle - Math.PI / 2, 
             distance: 0 
         });
 
@@ -71,9 +71,9 @@ export function fire_shotgun() {
 
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             shotgun_bullets.push({
-                world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2,
-                world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2,
-                angle: constants.player.angle - Math.PI / 2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
+                world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2,
+                world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2,
+                angle: session.player.angle - Math.PI / 2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
                 distance: 0
             });
         }
@@ -85,14 +85,14 @@ export function fire_shotgun() {
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
 
-    if (constants.player.weapon === 1 && assault_rife.ammo < 30) {
+    if (session.player.weapon === 1 && assault_rife.ammo < 30) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {
             assault_rife.ammo = 30;
             isReloading = false;
             arReloadTimeoutId = null;
         }, 2000);
-    } else if (constants.player.weapon === 2 && shotgun.ammo < 5) {
+    } else if (session.player.weapon === 2 && shotgun.ammo < 5) {
         isReloading = true;
         sgReloadIntervalId = setInterval(() => {
             if (shotgun.ammo < 5) {
@@ -106,24 +106,24 @@ export function weapons_reload() {
 }
 
 export function switch_weapons() {
-    if (input.keys["Digit1"] && constants.player.weapon !== 1) {
+    if (input.keys["Digit1"] && session.player.weapon !== 1) {
         cancelReload();
         clearTimeout(sgSlowTimeoutId);
-        constants.player.weapon = 1;
-        constants.player.speed = 5;
-    } else if (input.keys["Digit2"] && constants.player.weapon !== 2) {
+        session.player.weapon = 1;
+        session.player.speed = 5;
+    } else if (input.keys["Digit2"] && session.player.weapon !== 2) {
         cancelReload();
         clearTimeout(arSlowTimeoutId);
-        constants.player.weapon = 2;
-        constants.player.speed = 5;
+        session.player.weapon = 2;
+        session.player.speed = 5;
     }
 }
 
 function slowPlayer(timeoutId, duration, setIdFn) {
-    constants.player.speed = 2.5;
+    session.player.speed = 2.5;
     clearTimeout(timeoutId);
     setIdFn(setTimeout(() => {
-        constants.player.speed = 5;
+        session.player.speed = 5;
         setIdFn(null);
     }, duration));
 }

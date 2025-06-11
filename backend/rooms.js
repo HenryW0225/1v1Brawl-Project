@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-const rooms = {};
+export const rooms = {};
 
 export function createRoom(socketId, username) {
     const roomCode = nanoid(5).toUpperCase();
@@ -18,14 +18,14 @@ export function joinRoom(roomCode, socketId, username) {
 
 export function getRoom(socketId) {
     for (const code in rooms) {
-        if (rooms[code].includes(socketId)) return code;
+        if (rooms[code].some(player => player.id === socketId)) return code;
     }
     return null;
 }
 
 export function leaveRoom(socketId) {
     for (const code in rooms) {
-        const index = rooms[code].indexOf(socketId);
+        const index = rooms[code].findIndex(player => player.id === socketId);
         if (index !== -1) {
             rooms[code].splice(index, 1);
             if (rooms[code].length === 0) {

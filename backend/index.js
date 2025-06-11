@@ -2,7 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
+import { rooms, createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
 
 const PORT = process.env.PORT || 3000;
 

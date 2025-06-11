@@ -3,6 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { rooms, createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
+import { startGame, movePlayer, endGame} from './games.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -29,13 +30,22 @@ io.on('connection', (socket) => {
         if (success) {
             socket.join(roomCode);
             io.to(roomCode).emit('room-joined', { roomCode, players: rooms[roomCode] });
-            io.to(roomCode).emit('start-game');
+            //io.to(roomCode).emit('start-game');
             console.log(`${socket.id} joined room ${roomCode}`);
         } else {
             socket.emit('room-error', 'Room full or does not exist');
         }
     });
-    
+
+    socket.on('start-game', ({ roomCode }) => {
+        startGame(roomCode, io);
+        io.to(roomCode).emit('game-started');
+    });
+
+    socket.on('player-input', ({ roomCode, inputs }) => {
+        movePlayer(socket.id, roomCode, inputs);
+    });
+
     socket.on('disconnect', () => {
         const roomCode = leaveRoom(socket.id);
         if (roomCode) {

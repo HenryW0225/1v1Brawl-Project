@@ -1,41 +1,44 @@
 import * as images from './images.js';
 import * as input from './input.js';
 import * as constants from './constants.js';
+import * as session from './session.js';
+import { socket } from './socket.js';
 
 export function move_player() {
-    let dx = 0;
-    let dy = 0;
-    if (input.keys["KeyA"]) dx -= 1;
-    if (input.keys["KeyD"]) dx += 1;
-    if (input.keys["KeyW"]) dy -= 1;
-    if (input.keys["KeyS"]) dy += 1;
-
-    const length = Math.hypot(dx, dy);
-    if (length > 0) {
-        dx = (dx / length) * constants.player.speed;
-        dy = (dy / length) * constants.player.speed;
-    }
-    constants.player.world_x += dx;
-    constants.player.world_y += dy;
-
-    constants.player.world_x = Math.max(0, Math.min(constants.world_width, constants.player.world_x));
-    constants.player.world_y = Math.max(0, Math.min(constants.world_height, constants.player.world_y));
+    socket.emit('player-input', {
+        roomCode: session.roomCode,
+        inputs: {
+            up: input.keys["KeyW"],
+            down: input.keys["KeyS"],
+            left: input.keys["KeyA"],
+            right: input.keys["KeyD"],
+            mouseX: input.mouseX,
+            mouseY: input.mouseY
+        }
+    }); 
 }
 
-export function draw_player() {
-    const offsetX = constants.player.world_x - constants.player.position_x + constants.ctx_width / 2;
-    const offsetY = constants.player.world_y - constants.player.position_y + constants.ctx_height / 2;
+export function draw_players() {
+    const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
+    const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
 
-    const worldMouseX = input.mouseX + constants.player.position_x - constants.ctx_width / 2;
-    const worldMouseY = input.mouseY + constants.player.position_y - constants.ctx_height / 2;
+    const offsetX = session.player.world_x - position_x + constants.ctx_width / 2;
+    const offsetY = session.player.world_y - position_y + constants.ctx_height / 2;
 
-    const dx = worldMouseX - constants.player.world_x;
-    const dy = worldMouseY - constants.player.world_y;
-    constants.player.angle = Math.atan2(dy, dx) + Math.PI/2;
+    for (const opponent of Object.values(session.opponent_players)) {
+        constants.ctx.save();
+        const oppX = opponent.world_x - position_x + constants.ctx_width / 2;
+        const oppY = opponent.world_y - position_y + constants.ctx_height / 2;
+
+        constants.ctx.translate(oppX, oppY);
+        constants.ctx.rotate(opponent.angle);
+        constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+        constants.ctx.restore();
+    }
 
     constants.ctx.save();
     constants.ctx.translate(offsetX, offsetY);
-    constants.ctx.rotate(constants.player.angle);
-    constants.ctx.drawImage(images.playerImg, -constants.player.width / 2, -constants.player.height / 2, constants.player.width, constants.player.height);
+    constants.ctx.rotate(session.player.angle);
+    constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
     constants.ctx.restore();
 }

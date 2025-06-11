@@ -1,6 +1,8 @@
 import * as images from './images.js';
 import * as input from './input.js';
 import * as constants from './constants.js';
+import * as session from './session.js';
+import { socket } from './socket.js';
 
 export let assault_rife = {
     damage: 5,
@@ -49,18 +51,18 @@ export function fire_assault_rife() {
         input.firing.canFire = false;
         assault_rife.ammo--;
 
-        assault_rife_bullets.push({
-            world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2,
-            world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2,
-            angle: constants.player.angle - Math.PI / 2,
-            distance: 0
+        socket.emit('fire-ar', { 
+            roomCode: session.roomCode, 
+            world_x: constants.player.world_x - constants.player.position_x + constants.ctx_width / 2, 
+            world_y: constants.player.world_y - constants.player.position_y + constants.ctx_height / 2, 
+            angle: constants.player.angle - Math.PI / 2, 
+            distance: 0 
         });
 
         slowPlayer(arSlowTimeoutId, 500, (id) => arSlowTimeoutId = id);
     }
 }
 
-// Fire Shotgun
 export function fire_shotgun() {
     if (input.firing.mouseDown && input.firing.canFire && shotgun.ammo > 0 && sgSlowTimeoutId === null) {
         cancelReload();

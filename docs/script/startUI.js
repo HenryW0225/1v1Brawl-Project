@@ -5,10 +5,11 @@ export const enterBtn = document.getElementById("enterBtn");
 export const codeInput = document.getElementById("codeInput");
 export const startBtn = document.getElementById("startBtn");
 
+import * as constants from './constants.js';
+import * as session from './session.js';
 import { socket } from './socket.js';
 
 let playerName = "";
-let currentRoomCode = null;
 
 export function create_button() {
     const name = usernameInput.value.trim();
@@ -43,8 +44,9 @@ export function enter_button() {
 }
 
 export function start_button() {
-    document.getElementById("loadingPage").style.display = "none";
-    document.getElementById("gameContainer").style.display = "flex";
+    session.player.world_x = constants.world_width - session.player.world_x;
+    socket.emmit('start-game', { roomCode: session.roomCode});
+    
 }
 
 export function showLoadingPage() {
@@ -53,11 +55,6 @@ export function showLoadingPage() {
 
 function enter_code_page() {
     document.getElementById("enterCodePage").style.display = "block";
-}
-
-export function updateRoomCode(code) {
-    currentRoomCode = code;
-    document.getElementById("roomCode").textContent = code;
 }
 
 export function updatePlayers(players) {

@@ -2,8 +2,8 @@ import * as gameLoop from './gameLoop.js';
 import * as startUI from './startUI.js';
 import * as layout from './layout.js';
 import * as images from './images.js';
+import * as session from './session.js';
 import { socket } from './socket.js';
-
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();
@@ -19,27 +19,17 @@ startUI.enterBtn.addEventListener("click", () => {
 
 startUI.startBtn.addEventListener("click", () => {
     startUI.start_button();
-    gameLoop.reset_game();
-    if (images.originalworldmapImg.complete) {
-        layout.create_worldmap();
-        gameLoop.game_loop();
-    } else {
-        images.originalworldmapImg.onload = () => {
-            layout.create_worldmap();
-            gameLoop.game_loop();
-        };
-    }
 });
 
 socket.on('room-created', ({ roomCode, players }) => {
-    startUI.updateRoomCode(roomCode);
+    session.update_room_code(roomCode);
     startUI.updatePlayers(players);
     startUI.showLoadingPage();
 });
 
 socket.on('room-joined', ({ roomCode, players }) => {
     document.getElementById("enterCodePage").style.display = "none";
-    startUI.updateRoomCode(roomCode);
+    session.update_room_code(roomCode);
     startUI.updatePlayers(players);
     startUI.showLoadingPage();
 });
@@ -50,4 +40,23 @@ socket.on('room-error', (msg) => {
 
 socket.on('player-list-updated', (players) => {
     startUI.updatePlayers(players);
+});
+
+socket.on('game-started', () => {
+    document.getElementById("loadingPage").style.display = "none";
+    if (images.originalworldmapImg.complete) {
+        document.getElementById("gameContainer").style.display = "flex";
+        layout.create_worldmap();
+        gameLoop.game_loop();
+    } else {
+        images.originalworldmapImg.onload = () => {
+            document.getElementById("gameContainer").style.display = "flex";
+            layout.create_worldmap();
+            gameLoop.game_loop();
+        };
+    }
+});
+
+socket.on('state-update', ({ players, bullets }) => {
+    session.update_players(socket.id, players);
 });

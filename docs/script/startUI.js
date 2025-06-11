@@ -40,7 +40,6 @@ export function enter_button() {
         return;
     }
     socket.emit('join-room', { roomCode: code, username: playerName });
-    document.getElementById("enterCodePage").style.display = "none";
 }
 
 export function start_button() {

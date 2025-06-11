@@ -38,6 +38,7 @@ socket.on('room-created', ({ roomCode, players }) => {
 });
 
 socket.on('room-joined', ({ roomCode, players }) => {
+    document.getElementById("enterCodePage").style.display = "none";
     startUI.updateRoomCode(roomCode);
     startUI.updatePlayers(players);
     startUI.showLoadingPage();

@@ -4,25 +4,32 @@ import * as constants from './constants.js';
 import * as session from './session.js';
 import { socket } from './socket.js';
 
+import * as input from './input.js';
+import * as session from './session.js';
+import * as constants from './constants.js';
+
 export function move_player_locally() {
     let dx = 0, dy = 0;
     if (input.keys["KeyA"]) dx -= 1;
     if (input.keys["KeyD"]) dx += 1;
     if (input.keys["KeyW"]) dy -= 1;
     if (input.keys["KeyS"]) dy += 1;
-    
+
     const len = Math.hypot(dx, dy);
     if (len > 0) {
         dx = (dx / len) * session.player.speed;
         dy = (dy / len) * session.player.speed;
     }
-    
+
     session.player.world_x = Math.max(0, Math.min(constants.world_width, session.player.world_x + dx));
     session.player.world_y = Math.max(0, Math.min(constants.world_height, session.player.world_y + dy));
-    
-    const worldMouseX = input.mouseX + session.player.world_x - constants.ctx_width / 2;
-    const worldMouseY = input.mouseY + session.player.world_y - constants.ctx_height / 2;
-    
+
+    const camX = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
+    const camY = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
+
+    const worldMouseX = input.mouseX + camX - constants.ctx_width / 2;
+    const worldMouseY = input.mouseY + camY - constants.ctx_height / 2;
+
     session.player.angle = Math.atan2(worldMouseY - session.player.world_y, worldMouseX - session.player.world_x) + Math.PI / 2;
 }
 

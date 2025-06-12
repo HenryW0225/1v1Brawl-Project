@@ -56,7 +56,6 @@ socket.on('game-started', () => {
             document.getElementById("gameContainer").style.display = "flex";
             layout.create_worldmap();
             requestAnimationFrame(gameLoop.game_loop);
-
         };
     }
 });

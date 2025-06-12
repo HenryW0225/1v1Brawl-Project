@@ -16,6 +16,7 @@ export function game_loop(timestamp) {
         lastServerUpdate = timestamp;
     }
 
-    players.draw_players();
+    players.draw_player();
+    players.draw_opponent_players();
     requestAnimationFrame(game_loop);
 }

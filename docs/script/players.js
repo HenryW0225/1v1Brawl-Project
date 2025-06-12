@@ -6,10 +6,10 @@ import { socket } from './socket.js';
 
 export function move_player_locally() {
     let dx = 0, dy = 0;
-    if (inputs.left) dx -= 1;
-    if (inputs.right) dx += 1;
-    if (inputs.up) dy -= 1;
-    if (inputs.down) dy += 1;
+    if (input.keys["KeyA"]) dx -= 1;
+    if (input.keys["KeyD"]) dx += 1;
+    if (input.keys["KeyW"]) dy -= 1;
+    if (input.keys["KeyS"]) dy += 1;
     
     const len = Math.hypot(dx, dy);
     if (len > 0) {
@@ -17,8 +17,8 @@ export function move_player_locally() {
         dy = (dy / len) * session.player.speed;
     }
     
-    session.player.world_x = Math.max(0, Math.min(constants.ctx_width, session.player.world_x + dx));
-    session.player.world_y = Math.max(0, Math.min(constants.ctx_height, session.player.world_y + dy));
+    session.player.world_x = Math.max(0, Math.min(constants.world_width, session.player.world_x + dx));
+    session.player.world_y = Math.max(0, Math.min(constants.world_height, session.player.world_y + dy));
     
     const worldMouseX = input.mouseX + session.player.world_x - constants.ctx_width / 2;
     const worldMouseY = input.mouseY + session.player.world_y - constants.ctx_height / 2;
@@ -36,12 +36,23 @@ export function update_player_server() {
     }); 
 }
 
-export function draw_players() {
+export function draw_player() {
     const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
     const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
 
     const offsetX = session.player.world_x - position_x + constants.ctx_width / 2;
     const offsetY = session.player.world_y - position_y + constants.ctx_height / 2;
+
+    constants.ctx.save();
+    constants.ctx.translate(offsetX, offsetY);
+    constants.ctx.rotate(session.player.angle);
+    constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+    constants.ctx.restore();
+}
+
+export function draw_opponent_players() {
+    const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
+    const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
 
     for (const opponent of Object.values(session.opponent_players)) {
         constants.ctx.save();
@@ -53,10 +64,4 @@ export function draw_players() {
         constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
         constants.ctx.restore();
     }
-
-    constants.ctx.save();
-    constants.ctx.translate(offsetX, offsetY);
-    constants.ctx.rotate(session.player.angle);
-    constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
-    constants.ctx.restore();
 }

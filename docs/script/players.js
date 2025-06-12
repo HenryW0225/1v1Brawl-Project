@@ -4,10 +4,6 @@ import * as constants from './constants.js';
 import * as session from './session.js';
 import { socket } from './socket.js';
 
-import * as input from './input.js';
-import * as session from './session.js';
-import * as constants from './constants.js';
-
 export function move_player_locally() {
     let dx = 0, dy = 0;
     if (input.keys["KeyA"]) dx -= 1;
@@ -35,8 +31,6 @@ export function move_player_locally() {
         worldMouseX - session.player.world_x
     ) + Math.PI / 2;
 }
-
-
 
 export function update_player_server() {
     socket.emit('player-input', {

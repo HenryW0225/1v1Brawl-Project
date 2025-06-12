@@ -3,13 +3,15 @@ import * as constants from './constants.js';
 const gameStates = {};
 const TICK_RATE = 100; 
 
-export function startGame(roomCode, io) {
+export function startGame(roomCode) {
     gameStates[roomCode] = {
         players: {},
         bullets: {},
         gameOver: false
     };
+}
 
+export function startUpdating(roomCode, io) {
     const gameInterval = setInterval(() => {
         const state = gameStates[roomCode];
         if (!state || state.gameOver) {

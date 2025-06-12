@@ -10,7 +10,7 @@ export function startGame(roomCode, player, io) {
         gameOver: false
     };
 
-    gameStates[roomCode].players[player.socketId] = {
+    gameStates[roomCode].players[player.socket_Id] = {
         world_x: player.world_x,
         world_y: player.world_y,
         angle: player.angle || 0,
@@ -32,11 +32,11 @@ export function startGame(roomCode, player, io) {
     }, TICK_RATE);
 }
 
-export function movePlayer(socketId, roomCode, inputs) {
+export function movePlayer(socket_Id, roomCode, inputs) {
     const room = gameStates[roomCode];
-    if (!room || !room.players[socketId]) return;
+    if (!room || !room.players[socket_Id]) return;
 
-    const player = room.players[socketId];
+    const player = room.players[socket_Id];
 
     let dx = 0, dy = 0;
     if (inputs.left) dx -= 1;

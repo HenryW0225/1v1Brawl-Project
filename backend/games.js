@@ -9,13 +9,14 @@ export function startGame(roomCode, player, io) {
         bullets: {},
         gameOver: false
     };
-    
+
     gameStates[roomCode].players[player.socketId] = {
         world_x: player.world_x,
         world_y: player.world_y,
         angle: player.angle || 0,
         health: player.health,
-        weapon: player.weapon
+        weapon: player.weapon,
+        speed: player.speed
     };
 
     const gameInterval = setInterval(() => {

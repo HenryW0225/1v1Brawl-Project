@@ -13,6 +13,7 @@ export let player = {
     angle: 0,
     health: 100,
     weapon: 1,
+    speed: 5,
     socket_Id: null
 }
 

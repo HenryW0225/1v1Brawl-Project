@@ -45,7 +45,7 @@ export function enter_button() {
 
 export function start_button() {
     session.player.world_x = constants.world_width - session.player.world_x;
-    socket.emit('start-game', { roomCode: session.roomCode});
+    socket.emit('start-game', { roomCode: session.roomCode, player: session.player});
     
 }
 

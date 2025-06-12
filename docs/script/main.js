@@ -22,12 +22,14 @@ startUI.startBtn.addEventListener("click", () => {
 });
 
 socket.on('room-created', ({ roomCode, players }) => {
+    session.player.socket_Id = socket.id;
     session.update_room_code(roomCode);
     startUI.updatePlayers(players);
     startUI.showLoadingPage();
 });
 
 socket.on('room-joined', ({ roomCode, players }) => {
+    session.player.socket_Id = socket.id;
     document.getElementById("enterCodePage").style.display = "none";
     session.update_room_code(roomCode);
     startUI.updatePlayers(players);

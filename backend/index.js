@@ -30,15 +30,14 @@ io.on('connection', (socket) => {
         if (success) {
             socket.join(roomCode);
             io.to(roomCode).emit('room-joined', { roomCode, players: rooms[roomCode] });
-            //io.to(roomCode).emit('start-game');
             console.log(`${socket.id} joined room ${roomCode}`);
         } else {
             socket.emit('room-error', 'Room full or does not exist');
         }
     });
 
-    socket.on('start-game', ({ roomCode }) => {
-        startGame(roomCode, io);
+    socket.on('start-game', ({ roomCode, player}) => {
+        startGame(roomCode, player, io);
         io.to(roomCode).emit('game-started');
     });
 

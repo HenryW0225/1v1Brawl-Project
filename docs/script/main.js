@@ -63,3 +63,7 @@ socket.on('game-started', () => {
 socket.on('state-update', ({ players, bullets }) => {
     session.update_players(socket.id, players);
 });
+
+socket.on("remove-player", (id) => {
+    delete session.opponent_players[id];
+});

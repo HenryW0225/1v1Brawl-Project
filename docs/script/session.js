@@ -26,20 +26,25 @@ function lerp(a, b, t) {
 }
 
 export function update_players(socket_Id, players) {
-    opponent_players = {};
-  
-    for (const [id, p] of Object.entries(players)) {
-      if (id === socket_Id) {
-        player.world_x = lerp(player.world_x, p.world_x, 0.1);
-        player.world_y = lerp(player.world_y, p.world_y, 0.1);
-        player.angle = p.angle;
-      } else {
+  for (const [id, p] of Object.entries(players)) {
+    if (id === socket_Id) {
+      player.world_x = lerp(player.world_x, p.world_x, 0.1);
+      player.world_y = lerp(player.world_y, p.world_y, 0.1);
+      player.angle = p.angle;
+    } else {
+      if (!opponent_players[id]) {
         opponent_players[id] = {
-          world_x: p.world_x,
-          world_y: p.world_y,
-          angle: p.angle,
+          prev: { ...p },
+          target: { ...p },
+          timestamp: Date.now()
         };
+      } else {
+        opponent_players[id].prev = { ...opponent_players[id].target };
+        opponent_players[id].target = { ...p };
+        opponent_players[id].timestamp = Date.now();
       }
     }
   }
+}
+
   

@@ -55,18 +55,40 @@ export function draw_player() {
     constants.ctx.restore();
 }
 
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+  
 export function draw_opponent_players() {
     const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
     const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
-
-    for (const opponent of Object.values(session.opponent_players)) {
-        constants.ctx.save();
-        const oppX = opponent.world_x - position_x + constants.ctx_width / 2;
-        const oppY = opponent.world_y - position_y + constants.ctx_height / 2;
-
-        constants.ctx.translate(oppX, oppY);
-        constants.ctx.rotate(opponent.angle);
-        constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
-        constants.ctx.restore();
+  
+    const now = Date.now();
+  
+    for (const [id, opponent] of Object.entries(session.opponent_players)) {
+      const { prev, target, timestamp } = opponent;
+  
+      const elapsed = now - timestamp;
+      const interp = Math.min(elapsed / 100, 1); 
+  
+      const world_x = lerp(prev.world_x, target.world_x, interp);
+      const world_y = lerp(prev.world_y, target.world_y, interp);
+  
+      const prevAngle = prev.angle;
+      const targetAngle = target.angle;
+      let angleDiff = targetAngle - prevAngle;
+      if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+      if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+      const angle = prevAngle + angleDiff * interp;
+  
+      const screen_x = world_x - position_x + constants.ctx_width / 2;
+      const screen_y = world_y - position_y + constants.ctx_height / 2;
+  
+      constants.ctx.save();
+      constants.ctx.translate(screen_x, screen_y);
+      constants.ctx.rotate(angle);
+      constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+      constants.ctx.restore();
     }
-}
+  }
+  

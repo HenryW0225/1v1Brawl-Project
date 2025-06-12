@@ -3,7 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { rooms, createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
-import { startGame, movePlayer, addPlayerInfo, startUpdating, endGame} from './games.js';
+import { startGame, movePlayer, addPlayerInfo, gameStates, endGame} from './games.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -55,8 +55,16 @@ io.on('connection', (socket) => {
             io.to(roomCode).emit('opponent-left');
             console.log(`${socket.id} left room ${roomCode}`);
             io.to(roomCode).emit('player-list-updated', rooms[roomCode]?.map(p => ({ name: p.name })) || []);
+            
+            if (gameStates[roomCode]?.players) {
+                delete gameStates[roomCode].players[socket.id];
+            }            
+            io.to(roomCode).emit("remove-player", socket.id);
+            if (Object.keys(gameStates[roomCode]?.players || {}).length === 0) {
+                delete gameStates[roomCode];
+            }            
         }
-    });    
+    });
 });
 
 server.listen(PORT, () => {

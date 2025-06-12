@@ -1,4 +1,4 @@
-const gameStates = {};
+export const gameStates = {};
 const TICK_RATE = 100; 
 
 export function startGame(roomCode) {

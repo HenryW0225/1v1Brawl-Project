@@ -3,20 +3,11 @@ import * as constants from './constants.js';
 const gameStates = {};
 const TICK_RATE = 100; 
 
-export function startGame(roomCode, player, io) {
+export function startGame(roomCode, io) {
     gameStates[roomCode] = {
         players: {},
         bullets: {},
         gameOver: false
-    };
-
-    gameStates[roomCode].players[player.socket_Id] = {
-        world_x: player.world_x,
-        world_y: player.world_y,
-        angle: player.angle || 0,
-        health: player.health,
-        weapon: player.weapon,
-        speed: player.speed
     };
 
     const gameInterval = setInterval(() => {
@@ -30,6 +21,17 @@ export function startGame(roomCode, player, io) {
             bullets: state.bullets
         });
     }, TICK_RATE);
+}
+
+export function addPlayerInfo(roomCode, player) {
+    gameStates[roomCode].players[player.socket_Id] = {
+        world_x: player.world_x,
+        world_y: player.world_y,
+        angle: player.angle || 0,
+        health: player.health,
+        weapon: player.weapon,
+        speed: player.speed
+    };
 }
 
 export function movePlayer(socket_Id, roomCode, inputs) {

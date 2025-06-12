@@ -45,6 +45,7 @@ socket.on('player-list-updated', (players) => {
 });
 
 socket.on('game-started', () => {
+    socket.emit('add-player-info', { roomCode: session.roomCode, player: session.player });
     document.getElementById("loadingPage").style.display = "none";
     if (images.originalworldmapImg.complete) {
         document.getElementById("gameContainer").style.display = "flex";

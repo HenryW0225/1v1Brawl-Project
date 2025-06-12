@@ -1,13 +1,15 @@
 import * as constants from './constants.js';
 
 const gameStates = {};
-const TICK_RATE = 100; 
+const TICK_RATE = 33; 
 
 export function startGame(roomCode) {
     gameStates[roomCode] = {
         players: {},
         bullets: {},
-        gameOver: false
+        gameOver: false,
+        readyCount: 0,
+        updateStarted: false
     };
 }
 
@@ -25,8 +27,11 @@ export function startUpdating(roomCode, io) {
     }, TICK_RATE);
 }
 
-export function addPlayerInfo(roomCode, player) {
-    gameStates[roomCode].players[player.socket_Id] = {
+export function addPlayerInfo(roomCode, player, io) {
+    const state = gameStates[roomCode];
+    if (!state) return;
+
+    state.players[player.socket_Id] = {
         world_x: player.world_x,
         world_y: player.world_y,
         angle: player.angle || 0,
@@ -34,7 +39,16 @@ export function addPlayerInfo(roomCode, player) {
         weapon: player.weapon,
         speed: player.speed
     };
+
+    state.readyCount++;
+
+    if (state.readyCount >= 2 && !state.updateStarted) {
+        state.updateStarted = true;
+        startUpdating(roomCode, io);
+        console.log(`Started update loop for room ${roomCode}`);
+    }
 }
+
 
 export function movePlayer(socket_Id, roomCode, inputs) {
     const room = gameStates[roomCode];

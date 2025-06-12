@@ -46,11 +46,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('add-player-info', ({ roomCode, player }) => {
-        addPlayerInfo(roomCode, player);
-    });
-
-    socket.on('start-updating', ({ roomCode }) => {
-        startUpdating(roomCode, io);
+        addPlayerInfo(roomCode, player, io);
     });
 
     socket.on('disconnect', () => {

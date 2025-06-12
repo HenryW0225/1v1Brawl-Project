@@ -14,6 +14,8 @@ export let player = {
     health: 100,
     weapon: 1,
     speed: 5,
+    width: 50,
+    height: 50,
     socket_Id: null
 }
 

@@ -37,7 +37,9 @@ export function addPlayerInfo(roomCode, player, io) {
         angle: player.angle || 0,
         health: player.health,
         weapon: player.weapon,
-        speed: player.speed
+        speed: player.speed,
+        width: player.width,
+        height: player.height
     };
 
     state.readyCount++;

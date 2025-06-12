@@ -21,13 +21,17 @@ export let player = {
 
 export let opponent_players = {};
 
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
 export function update_players(socket_Id, players) {
     opponent_players = {};
   
     for (const [id, p] of Object.entries(players)) {
       if (id === socket_Id) {
-        player.world_x = p.world_x;
-        player.world_y = p.world_y;
+        player.world_x = lerp(player.world_x, p.world_x, 0.1);
+        player.world_y = lerp(player.world_y, p.world_y, 0.1);
         player.angle = p.angle;
       } else {
         opponent_players[id] = {

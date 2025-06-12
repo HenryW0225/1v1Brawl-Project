@@ -50,12 +50,13 @@ socket.on('game-started', () => {
     if (images.originalworldmapImg.complete) {
         document.getElementById("gameContainer").style.display = "flex";
         layout.create_worldmap();
-        gameLoop.game_loop();
+        requestAnimationFrame(gameLoop.game_loop);
     } else {
         images.originalworldmapImg.onload = () => {
             document.getElementById("gameContainer").style.display = "flex";
             layout.create_worldmap();
-            gameLoop.game_loop();
+            requestAnimationFrame(gameLoop.game_loop);
+
         };
     }
 });

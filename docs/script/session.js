@@ -1,3 +1,5 @@
+import * as constants from './constants.js';
+
 export let roomCode = null;
 
 export function update_room_code(code) {
@@ -7,7 +9,7 @@ export function update_room_code(code) {
 
 export let player = {
     world_x: 250,
-    world_y: canvas.height,
+    world_y: constants.ctx_height,
     position_x: 0,
     position_y: 0,
     angle: 0,

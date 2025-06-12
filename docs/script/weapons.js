@@ -5,27 +5,33 @@ import * as session from './session.js';
 import { socket } from './socket.js';
 
 export let assault_rife = {
-    damage: 5,
     ammo: 30,
-    width: 15,
-    height: 30,
-    speed: 20,
-    range: 60
 };
 
 export let shotgun = {
-    damage: 5,
     ammo: 5,
     bullet_amount: 6,
     spread: Math.PI / 16,
-    width: 10,
-    height: 20,
-    speed: 25,
-    range: 20
 };
 
-let assault_rife_bullets = [];
-let shotgun_bullets = [];
+export const bulletStats = {
+    1: { // Assault Rifle
+        speed: 20,
+        range: 60,
+        damage: 10,
+        width: 15,
+        height: 30
+    },
+    2: { // Shotgun
+        speed: 25,
+        range: 20,
+        damage: 5,
+        width: 10,
+        height: 20
+    }
+};
+
+let bullets = [];
 
 let isReloading = false;
 let arReloadTimeoutId = null;
@@ -51,11 +57,12 @@ export function fire_assault_rife() {
         input.firing.canFire = false;
         assault_rife.ammo--;
 
-        socket.emit('fire-ar', { 
+        socket.emit('fire-bullet', { 
             roomCode: session.roomCode, 
             world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2, 
             world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2, 
             angle: session.player.angle - Math.PI / 2, 
+            type: 1,
             distance: 0 
         });
 
@@ -70,21 +77,21 @@ export function fire_shotgun() {
         shotgun.ammo--;
 
         for (let i = 0; i < shotgun.bullet_amount; i++) {
-            shotgun_bullets.push({
+            socket.emit('fire-bullet', {
+                roomCode: session.roomCode,
                 world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2,
                 world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2,
                 angle: session.player.angle - Math.PI / 2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
+                type: 2,
                 distance: 0
             });
         }
-
         slowPlayer(sgSlowTimeoutId, 1000, (id) => sgSlowTimeoutId = id);
     }
 }
 
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
-
     if (session.player.weapon === 1 && assault_rife.ammo < 30) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {
@@ -128,37 +135,70 @@ function slowPlayer(timeoutId, duration, setIdFn) {
     }, duration));
 }
 
-export function game_assault_rife() {
-    updateBullets(assault_rife_bullets, assault_rife);
-    drawBullets(assault_rife_bullets, assault_rife);
+export function add_bullet(bullet) {
+    bullets.push(bullet);
 }
 
-export function game_shotgun() {
-    updateBullets(shotgun_bullets, shotgun);
-    drawBullets(shotgun_bullets, shotgun);
-}
-
-function updateBullets(bullets, weapon) {
+export function move_bullets() {
     for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        b.distance++;
-        b.world_x += Math.cos(b.angle) * weapon.speed;
-        b.world_y += Math.sin(b.angle) * weapon.speed;
+        const bullet = bullets[i];
+        const stats = bulletStats[bullet.type];
 
-        if (b.distance > weapon.range ||
-            b.world_x < 0 || b.world_x > constants.world_width ||
-            b.world_y < 0 || b.world_y > constants.world_height) {
+        bullet.world_x += stats.speed * Math.cos(bullet.angle);
+        bullet.world_y += stats.speed * Math.sin(bullet.angle);
+        bullet.distance += 1;
+
+        for (const [id, opp] of Object.entries(session.opponent_players)) {
+            const dx = bullet.world_x - opp.target.world_x;
+            const dy = bullet.world_y - opp.target.world_y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 20) {
+                socket.emit('player-hit', { roomCode: session.roomCode, targetId: id, damage: stats.damage });
+                bullets.splice(i, 1);
+                break;
+            }
+        }
+
+        if (bullet.distance > stats.range) {
             bullets.splice(i, 1);
         }
     }
 }
 
-function drawBullets(bullets, weapon) {
-    for (const b of bullets) {
+export function draw_bullets() {
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+        const stats = bulletStats[bullet.type];
+
+        const screen_x = bullet.world_x - session.player.world_x + constants.ctx_width / 2;
+        const screen_y = bullet.world_y - session.player.world_y + constants.ctx_height / 2;
+
         constants.ctx.save();
-        constants.ctx.translate(b.world_x, b.world_y);
-        constants.ctx.rotate(b.angle - Math.PI / 2);
-        constants.ctx.drawImage(images.bulletImg, -weapon.width / 2, -weapon.height / 2, weapon.width, weapon.height);
+        constants.ctx.translate(screen_x, screen_y);
+        constants.ctx.rotate(bullet.angle);
+        constants.ctx.drawImage(
+            images.bulletImg,
+            -stats.width / 2,
+            -stats.height / 2,
+            stats.width,
+            stats.height
+        );
         constants.ctx.restore();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 import * as weapons from './weapons.js';
 import * as players from './players.js';
 import * as layout from './layout.js';
+import * as session from './session.js';
 
 let lastServerUpdate = 0;
 
@@ -15,6 +16,16 @@ export function game_loop(timestamp) {
         players.update_player_server();
         lastServerUpdate = timestamp;
     }
+    if (session.player.weapon === 1) {
+        weapons.fire_assault_rife();
+    }
+    else if (session.player.weapon === 2) {
+        weapons.fire_shotgun();
+    }
+    weapons.switch_weapons();
+    weapons.weapons_reload();
+    weapons.move_bullets();
+    weapons.draw_bullets();
 
     players.draw_player();
     players.draw_opponent_players();

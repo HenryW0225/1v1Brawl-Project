@@ -3,7 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { rooms, createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
-import { startGame, movePlayer, addPlayerInfo, gameStates, endGame} from './games.js';
+import { startGame, movePlayer, addPlayerInfo, gameStates, player_hit, endGame} from './games.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -47,6 +47,24 @@ io.on('connection', (socket) => {
 
     socket.on('add-player-info', ({ roomCode, player }) => {
         addPlayerInfo(roomCode, player, io);
+    });
+
+    socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
+        socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
+            const bullet = {
+                world_x,
+                world_y,
+                angle,
+                type,
+                distance,
+                shooterId: socket.id
+            };
+            io.to(roomCode).emit('bullet-fired', bullet);
+        });
+    });
+
+    socket.on('player-hit', ({ roomCode, targetId, damage }) => {
+        player_hit(roomCode, targetId, damage);
     });
 
     socket.on('disconnect', () => {

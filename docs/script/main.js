@@ -3,6 +3,7 @@ import * as startUI from './startUI.js';
 import * as layout from './layout.js';
 import * as images from './images.js';
 import * as session from './session.js';
+import * as weapons from './weapons.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -66,4 +67,8 @@ socket.on('state-update', ({ players, bullets }) => {
 
 socket.on("remove-player", (id) => {
     delete session.opponent_players[id];
+});
+
+socket.on('bullet-fired', (bullet) => {
+    weapons.add_bullet(bullet);
 });

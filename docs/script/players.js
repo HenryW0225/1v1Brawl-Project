@@ -4,17 +4,35 @@ import * as constants from './constants.js';
 import * as session from './session.js';
 import { socket } from './socket.js';
 
-export function move_player() {
+export function move_player_locally() {
+    let dx = 0, dy = 0;
+    if (inputs.left) dx -= 1;
+    if (inputs.right) dx += 1;
+    if (inputs.up) dy -= 1;
+    if (inputs.down) dy += 1;
+    
+    const len = Math.hypot(dx, dy);
+    if (len > 0) {
+        dx = (dx / len) * session.player.speed;
+        dy = (dy / len) * session.player.speed;
+    }
+    
+    session.player.world_x = Math.max(0, Math.min(constants.ctx_width, session.player.world_x + dx));
+    session.player.world_y = Math.max(0, Math.min(constants.ctx_height, session.player.world_y + dy));
+    
+    const worldMouseX = input.mouseX + session.player.world_x - constants.ctx_width / 2;
+    const worldMouseY = input.mouseY + session.player.world_y - constants.ctx_height / 2;
+    
+    session.player.angle = Math.atan2(worldMouseY - session.player.world_y, worldMouseX - session.player.world_x) + Math.PI / 2;
+}
+
+
+export function update_player_server() {
     socket.emit('player-input', {
         roomCode: session.roomCode,
-        inputs: {
-            up: input.keys["KeyW"],
-            down: input.keys["KeyS"],
-            left: input.keys["KeyA"],
-            right: input.keys["KeyD"],
-            mouseX: input.mouseX,
-            mouseY: input.mouseY
-        }
+        world_x: session.player.world_x,
+        world_y: session.player.world_y,
+        angle: session.player.angle
     }); 
 }
 

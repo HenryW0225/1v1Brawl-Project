@@ -1,7 +1,5 @@
-import * as constants from './constants.js';
-
 const gameStates = {};
-const TICK_RATE = 33; 
+const TICK_RATE = 100; 
 
 export function startGame(roomCode) {
     gameStates[roomCode] = {
@@ -52,31 +50,15 @@ export function addPlayerInfo(roomCode, player, io) {
 }
 
 
-export function movePlayer(socket_Id, roomCode, inputs) {
+export function movePlayer(socket_Id, roomCode, world_x, world_y, angle) {
     const room = gameStates[roomCode];
     if (!room || !room.players[socket_Id]) return;
 
     const player = room.players[socket_Id];
 
-    let dx = 0, dy = 0;
-    if (inputs.left) dx -= 1;
-    if (inputs.right) dx += 1;
-    if (inputs.up) dy -= 1;
-    if (inputs.down) dy += 1;
-
-    const len = Math.hypot(dx, dy);
-    if (len > 0) {
-        dx = (dx / len) * player.speed;
-        dy = (dy / len) * player.speed;
-    }
-
-    player.world_x = Math.max(0, Math.min(constants.worldWidth, player.world_x + dx));
-    player.world_y = Math.max(0, Math.min(constants.worldHeight, player.world_y + dy));
-
-    const worldMouseX = inputs.mouseX + player.world_x - constants.canvasWidth / 2;
-    const worldMouseY = inputs.mouseY + player.world_y - constants.canvasHeight / 2;
-
-    player.angle = Math.atan2(worldMouseY - player.world_y, worldMouseX - player.world_x) + Math.PI / 2;
+    player.world_x = world_x;
+    player.world_y = world_y;
+    player.angle = angle;
 }
 
 

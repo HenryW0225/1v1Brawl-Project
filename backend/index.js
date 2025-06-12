@@ -41,8 +41,8 @@ io.on('connection', (socket) => {
         io.to(roomCode).emit('game-started');
     });
 
-    socket.on('player-input', ({ roomCode, inputs }) => {
-        movePlayer(socket.id, roomCode, inputs);
+    socket.on('player-input', ({ roomCode, world_x, world_y, angle }) => {
+        movePlayer(socket.id, roomCode, world_x, world_y, angle);
     });
 
     socket.on('add-player-info', ({ roomCode, player }) => {

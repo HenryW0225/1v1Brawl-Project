@@ -173,8 +173,8 @@ export function draw_bullets() {
         const bullet = bullets[i];
         const stats = bulletStats[bullet.type];
         
-        screen_x = bullet.world_x - session.player.world_x + constants.ctx_width / 2;
-        screen_y = bullet.world_y - session.player.world_y + constants.ctx_height / 2;
+        const screen_x = bullet.world_x - session.player.world_x + constants.ctx_width / 2;
+        const screen_y = bullet.world_y - session.player.world_y + constants.ctx_height / 2;
 
         constants.ctx.save();
         constants.ctx.translate(screen_x, screen_y);

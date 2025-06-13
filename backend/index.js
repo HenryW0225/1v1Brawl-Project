@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
     
 
     socket.on('player-hit', ({ roomCode, damage }) => {
-        player_hit(roomCode, socket.id, damage);
+        player_hit(roomCode, socket.id, damage, io);
     });
 
     socket.on('disconnect', () => {

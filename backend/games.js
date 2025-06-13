@@ -59,11 +59,12 @@ export function movePlayer(socket_Id, roomCode, world_x, world_y, angle) {
     player.angle = angle;
 }
 
-export function player_hit(roomCode, socket_Id, damage) {
+export function player_hit(roomCode, socket_Id, damage, io) {
     gameStates[roomCode].players[socket_Id].health -= damage;
     if (gameStates[roomCode].players[socket_Id].health < 0) {
         gameStates[roomCode].players[socket_Id].health = 0;
     }
+    io.to(socket_Id).emit('update-health', { newHealth: gameStates[roomCode].players[socket_Id].health });
 }
 
 export function endGame() {

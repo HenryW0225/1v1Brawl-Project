@@ -46,6 +46,7 @@ socket.on('player-list-updated', (players) => {
 });
 
 socket.on('game-started', () => {
+    document.getElementById('healthBarText').textContent = 100 + ' / 100';
     socket.emit('add-player-info', { roomCode: session.roomCode, player: session.player });
     document.getElementById("loadingPage").style.display = "none";
     if (images.originalworldmapImg.complete) {
@@ -71,4 +72,9 @@ socket.on("remove-player", (id) => {
 
 socket.on('bullet-fired', (bullet) => {
     weapons.add_bullet(bullet);
+});
+
+socket.on('update-health', (newHealth) => {
+    document.getElementById('healthBar').style.width = newHealth + '%';
+    document.getElementById('healthBarText').textContent = newHealth + ' / 100';
 });

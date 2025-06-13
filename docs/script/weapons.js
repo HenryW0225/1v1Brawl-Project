@@ -147,16 +147,15 @@ export function move_bullets() {
         bullet.world_x += stats.speed * Math.cos(bullet.angle);
         bullet.world_y += stats.speed * Math.sin(bullet.angle);
         bullet.distance += 1;
-
-        for (const [id, opp] of Object.entries(session.opponent_players)) {
-            const dx = bullet.world_x - opp.target.world_x;
-            const dy = bullet.world_y - opp.target.world_y;
+        
+        if (bullet.shooterId !== session.player.socket_Id) {
+            const dx = bullet.world_x - session.player.world_x;
+            const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 20) {
-                socket.emit('player-hit', { roomCode: session.roomCode, targetId: id, damage: stats.damage });
+            if (dist < 30) {
+                socket.emit('player-hit', { roomCode: session.roomCode, damage: stats.damage });
                 bullets.splice(i, 1);
-                break;
+                continue;
             }
         }
 

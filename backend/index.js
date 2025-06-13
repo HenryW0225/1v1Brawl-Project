@@ -51,11 +51,11 @@ io.on('connection', (socket) => {
 
     socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
         const bullet = {
-            world_x,
-            world_y,
-            angle,
-            type,
-            distance,
+            world_x: world_x,
+            world_y: world_y,
+            angle: angle,
+            type: type,
+            distance: distance,
             shooterId: socket.id
         };
         io.to(roomCode).emit('bullet-fired', bullet);

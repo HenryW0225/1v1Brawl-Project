@@ -59,8 +59,8 @@ export function fire_assault_rife() {
 
         socket.emit('fire-bullet', { 
             roomCode: session.roomCode, 
-            world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2, 
-            world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2, 
+            world_x: session.player.world_x, 
+            world_y: session.player.world_y, 
             angle: session.player.angle - Math.PI / 2, 
             type: 1,
             distance: 0 
@@ -79,8 +79,8 @@ export function fire_shotgun() {
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             socket.emit('fire-bullet', {
                 roomCode: session.roomCode,
-                world_x: session.player.world_x - session.player.position_x + constants.ctx_width / 2,
-                world_y: session.player.world_y - session.player.position_y + constants.ctx_height / 2,
+                world_x: session.player.world_x,
+                world_y: session.player.world_y,
                 angle: session.player.angle - Math.PI / 2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
                 type: 2,
                 distance: 0

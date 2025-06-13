@@ -173,11 +173,11 @@ export function draw_bullets() {
         const bullet = bullets[i];
         const stats = bulletStats[bullet.type];
         
-        const screen_x = bullet.world_x - session.player.world_x + constants.ctx_width / 2;
-        const screen_y = bullet.world_y - session.player.world_y + constants.ctx_height / 2;
+        const camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
+        const camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
 
         constants.ctx.save();
-        constants.ctx.translate(screen_x, screen_y);
+        constants.ctx.translate(bullet.world_x - camera_x, bullet.world_y - camera_y);
         constants.ctx.rotate(bullet.angle);
         constants.ctx.drawImage(
             images.bulletImg,

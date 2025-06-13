@@ -199,6 +199,7 @@ export function weapons_reset() {
     clearTimeout(arSlowTimeoutId);
     clearTimeout(sgSlowTimeoutId);
     clearTimeout(bandages.bandageTimer);
+    bandages.amount = 5;
     session.player.speed = 5;
     session.player.weapon = 1;
 }

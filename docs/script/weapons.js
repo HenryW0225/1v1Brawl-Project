@@ -51,6 +51,7 @@ function cancelReload() {
     }
     isReloading = false;
     clearTimeout(bandages.bandageTimer);
+    bandages.bandageTimer = null;
 }
 
 export function fire_assault_rife() {
@@ -93,6 +94,8 @@ export function fire_shotgun() {
 
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
+    clearTimeout(bandages.bandageTimer);
+    bandages.bandageTimer = null;
     if (session.player.weapon === 1 && assault_rife.ammo < 30) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {
@@ -198,7 +201,6 @@ export function weapons_reset() {
     cancelReload();
     clearTimeout(arSlowTimeoutId);
     clearTimeout(sgSlowTimeoutId);
-    clearTimeout(bandages.bandageTimer);
     bandages.amount = 5;
     session.player.speed = 5;
     session.player.weapon = 1;
@@ -212,6 +214,7 @@ export let bandages = {
 
 export function use_bandage() {
     if (input.keys["KeyE"] && bandages.amount > 0 && bandages.bandageTimer === null && session.player.health < 100) {
+        cancelReload();
         session.player.speed = 1.5;
         bandages.bandageTimer = setTimeout(() => {
             socket.emit('used-bandage', { roomCode: session.roomCode, damage: bandages.healing });

@@ -31,7 +31,7 @@ export const bulletStats = {
     }
 };
 
-let bullets = [];
+export let bullets = [];
 let pendingBullets = [];
 
 let isReloading = false;
@@ -154,8 +154,7 @@ export function move_bullets() {
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 25) {
-                socket.emit('player-hit', { roomCode: session.roomCode, damage: stats.damage });
-                bullets.splice(i, 1);
+                socket.emit('player-hit', { roomCode: session.roomCode, damage: stats.damage, bulletId: bullet.bulletId});
                 continue;
             }
         }
@@ -188,6 +187,17 @@ export function draw_bullets() {
         );
         constants.ctx.restore();
     }
+}
+
+export function weapons_reset() {
+    assault_rife.ammo = 30;
+    shotgun.ammo = 5;
+    bullets = [];
+    pendingBullets = [];
+    cancelReload();
+    clearTimeout(arSlowTimeoutId);
+    clearTimeout(sgSlowTimeoutId);
+    session.player.speed = 5;
 }
 
 

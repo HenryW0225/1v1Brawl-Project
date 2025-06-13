@@ -59,14 +59,23 @@ export function movePlayer(socket_Id, roomCode, world_x, world_y, angle) {
     player.angle = angle;
 }
 
-export function player_hit(roomCode, socket_Id, damage, io) {
-    gameStates[roomCode].players[socket_Id].health -= damage;
-    if (gameStates[roomCode].players[socket_Id].health < 0) {
-        gameStates[roomCode].players[socket_Id].health = 0;
+export function player_hit(roomCode, socket_Id, damage, bulletId, io) {
+    const room = gameStates[roomCode];
+    if (!room) return;
+
+    room.players[socket_Id].health -= damage;
+    if (room.players[socket_Id].health < 0) {
+        room.players[socket_Id].health = 0;
     }
-    io.to(socket_Id).emit('update-health', { newHealth: gameStates[roomCode].players[socket_Id].health });
+    io.to(roomCode).emit('remove-bullet', (bulletId));
+    io.to(socket_Id).emit('update-health', { newHealth: room.players[socket_Id].health });
+
+    if (room.players[socket_Id].health === 0) {
+        delete room.players[socket_Id];
+        if (Object.keys(room.players).length < 2) {
+            room.gameOver = true;
+            io.to(roomCode).emit('game-over');
+        }
+    }
 }
 
-export function endGame() {
-
-}

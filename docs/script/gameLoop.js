@@ -5,7 +5,20 @@ import * as session from './session.js';
 
 let lastServerUpdate = 0;
 
+let game_running = true;
+
+export function start_game_loop() {
+    game_running = true;
+}
+
+export function stop_game_loop() {
+    game_running = false;
+}
+
 export function game_loop(timestamp) {
+    if (!game_running) {
+        return;
+    }
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
 

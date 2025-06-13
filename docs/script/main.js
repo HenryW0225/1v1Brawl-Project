@@ -4,6 +4,7 @@ import * as layout from './layout.js';
 import * as images from './images.js';
 import * as session from './session.js';
 import * as weapons from './weapons.js';
+import * as input from './input.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -46,6 +47,7 @@ socket.on('player-list-updated', (players) => {
 });
 
 socket.on('game-started', () => {
+    gameLoop.start_game_loop();
     document.getElementById('healthBarText').textContent = 100 + ' / 100';
     socket.emit('add-player-info', { roomCode: session.roomCode, player: session.player });
     document.getElementById("loadingPage").style.display = "none";
@@ -77,4 +79,23 @@ socket.on('bullet-fired', (bullet) => {
 socket.on('update-health', ({ newHealth} ) => {
     document.getElementById('healthBar').style.width = newHealth + '%';
     document.getElementById('healthBarText').textContent = newHealth + ' / 100';
+});
+
+socket.on('game-over', () => {
+    gameLoop.stop_game_loop();
+
+    setTimeout(() => {
+        document.getElementById("enterCodePage").style.display = "none";
+        document.getElementById("loadingPage").style.display = "block";
+        session.players_reset();
+        weapons.weapons_reset();
+        input.reset();
+    }, 4000); 
+});
+
+socket.on('remove-bullet', (bulletId) => {
+    const index = weapons.bullets.findIndex(bullet => bullet.bulletId === bulletId);
+    if (index !== -1) {
+        weapons.bullets.splice(index, 1);
+    }
 });

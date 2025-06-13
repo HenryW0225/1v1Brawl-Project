@@ -7,6 +7,15 @@ export function update_room_code(code) {
     document.getElementById("roomCode").textContent = roomCode;
 }
 
+export function players_reset() {
+    player.world_x = 250;
+    player.world_y = constants.ctx_height;
+    angle = 0;
+    health = 100;
+    weapon = 1;
+    opponent_players = {};
+}
+
 export let player = {
     world_x: 250,
     world_y: constants.ctx_height,

@@ -79,6 +79,7 @@ socket.on('bullet-fired', (bullet) => {
 });
 
 socket.on('update-health', ({ newHealth} ) => {
+    session.player.health = newHealth;
     document.getElementById('healthBar').style.width = newHealth + '%';
     document.getElementById('healthBarText').textContent = newHealth + ' / 100';
 });

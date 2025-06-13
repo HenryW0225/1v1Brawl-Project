@@ -75,6 +75,7 @@ export function player_hit(roomCode, socket_Id, damage, bulletId, io) {
         if (Object.keys(room.players).length < 2) {
             room.gameOver = true;
             io.to(roomCode).emit('game-over');
+            delete gameStates[roomCode]; 
         }
     }
 }

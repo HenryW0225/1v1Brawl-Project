@@ -58,7 +58,8 @@ io.on('connection', (socket) => {
             type: type,
             distance: distance,
             bulletId: id,
-            shooterId: socket.id
+            shooterId: socket.id,
+            hit: false
         };
         io.to(roomCode).emit('bullet-fired', bullet);
     });

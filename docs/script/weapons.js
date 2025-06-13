@@ -16,16 +16,16 @@ export let shotgun = {
 
 export const bulletStats = {
     1: { // Assault Rifle
-        speed: 20,
+        speed: 15,
         range: 60,
-        damage: 10,
+        damage: 5,
         width: 15,
         height: 30
     },
     2: { // Shotgun
-        speed: 25,
+        speed: 20,
         range: 20,
-        damage: 5,
+        damage: 3,
         width: 10,
         height: 20
     }
@@ -153,7 +153,8 @@ export function move_bullets() {
             const dx = bullet.world_x - session.player.world_x;
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 35) {
+            if (dist < 35 && !bullet.hit) {
+                bullet.hit = true;
                 socket.emit('player-hit', { roomCode: session.roomCode, damage: stats.damage, bulletId: bullet.bulletId});
                 continue;
             }
@@ -192,8 +193,8 @@ export function draw_bullets() {
 export function weapons_reset() {
     assault_rife.ammo = 30;
     shotgun.ammo = 5;
-    bullets = [];
-    pendingBullets = [];
+    bullets.length = 0;
+    pendingBullets.length = 0;
     cancelReload();
     clearTimeout(arSlowTimeoutId);
     clearTimeout(sgSlowTimeoutId);

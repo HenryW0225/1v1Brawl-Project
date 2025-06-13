@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
         update_health(roomCode, socket.id, damage, io);
     });
 
-    socket.on('player-hit', ({ roomCode, damage }) => {
+    socket.on('used-bandage', ({ roomCode, damage }) => {
         update_health(roomCode, socket.id, damage, io);
     });
 

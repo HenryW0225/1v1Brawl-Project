@@ -213,7 +213,7 @@ export function use_bandage() {
     if (input.keys["KeyE"] && bandages.amount > 0 && bandages.bandageTimer === null && session.player.health < 100) {
         session.player.speed = 1.5;
         bandages.bandageTimer = setTimeout(() => {
-            socket.emit('used-bandage', { roomCode: session.roomCode, damage: bandage.healing });
+            socket.emit('used-bandage', { roomCode: session.roomCode, damage: bandages.healing });
             bandages.amount--;
             bandages.bandageTimer = null;
             session.player.speed = 5;

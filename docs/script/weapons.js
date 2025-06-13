@@ -32,6 +32,7 @@ export const bulletStats = {
 };
 
 let bullets = [];
+let pendingBullets = [];
 
 let isReloading = false;
 let arReloadTimeoutId = null;
@@ -136,7 +137,7 @@ function slowPlayer(timeoutId, duration, setIdFn) {
 }
 
 export function add_bullet(bullet) {
-    bullets.push(bullet);
+    pendingBullets.push(bullet);
 }
 
 export function move_bullets() {
@@ -163,6 +164,8 @@ export function move_bullets() {
             bullets.splice(i, 1);
         }
     }
+    bullets.push(...pendingBullets);
+    pendingBullets.length = 0;
 }
 
 export function draw_bullets() {

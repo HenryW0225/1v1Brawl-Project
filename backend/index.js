@@ -50,18 +50,17 @@ io.on('connection', (socket) => {
     });
 
     socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
-        socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
-            const bullet = {
-                world_x,
-                world_y,
-                angle,
-                type,
-                distance,
-                shooterId: socket.id
-            };
-            io.to(roomCode).emit('bullet-fired', bullet);
-        });
+        const bullet = {
+            world_x,
+            world_y,
+            angle,
+            type,
+            distance,
+            shooterId: socket.id
+        };
+        io.to(roomCode).emit('bullet-fired', bullet);
     });
+    
 
     socket.on('player-hit', ({ roomCode, targetId, damage }) => {
         player_hit(roomCode, targetId, damage);

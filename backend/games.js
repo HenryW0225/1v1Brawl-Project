@@ -4,6 +4,7 @@ const TICK_RATE = 100;
 export function startGame(roomCode) {
     gameStates[roomCode] = {
         players: {},
+        bullets: {},
         gameOver: false,
         readyCount: 0,
         updateStarted: false
@@ -61,7 +62,7 @@ export function movePlayer(socket_Id, roomCode, world_x, world_y, angle) {
 }
 
 export function player_hit(roomCode, socket_Id, damage) {
-    gameStates[roomCode].player[socket_Id].health -= damage;
+    gameStates[roomCode].players[socket_Id].health -= damage;
     if (gameStates[roomCode].player[socket_Id].health < 0) {
         gameStates[roomCode].player[socket_Id].health = 0;
     }

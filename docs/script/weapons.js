@@ -153,7 +153,7 @@ export function move_bullets() {
             const dx = bullet.world_x - session.player.world_x;
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 25) {
+            if (dist < 35) {
                 socket.emit('player-hit', { roomCode: session.roomCode, damage: stats.damage, bulletId: bullet.bulletId});
                 continue;
             }

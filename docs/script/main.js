@@ -85,7 +85,7 @@ socket.on('game-over', () => {
     gameLoop.stop_game_loop();
 
     setTimeout(() => {
-        document.getElementById("enterCodePage").style.display = "none";
+        document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
         session.players_reset();
         weapons.weapons_reset();

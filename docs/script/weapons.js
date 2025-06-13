@@ -172,9 +172,12 @@ export function draw_bullets() {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         const stats = bulletStats[bullet.type];
+        
+        screen_x = bullet.world_x - player.world_x + canvas.width / 2;
+        screen_y = bullet.world_y - player.world_y + canvas.height / 2;
 
         constants.ctx.save();
-        constants.ctx.translate(bullet.world_x, bullet.world_y);
+        constants.ctx.translate(screen_x, screen_y);
         constants.ctx.rotate(bullet.angle);
         constants.ctx.drawImage(
             images.bulletImg,

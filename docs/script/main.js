@@ -61,7 +61,7 @@ socket.on('game-started', () => {
     }
 });
 
-socket.on('state-update', ({ players, bullets }) => {
+socket.on('state-update', (players) => {
     session.update_players(socket.id, players);
 });
 

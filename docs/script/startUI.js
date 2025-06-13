@@ -7,6 +7,7 @@ export const startBtn = document.getElementById("startBtn");
 
 import * as constants from './constants.js';
 import * as session from './session.js';
+import * as crates from './crates.js';
 import { socket } from './socket.js';
 
 let playerName = "";
@@ -45,6 +46,7 @@ export function enter_button() {
 
 export function start_button() {
     session.player.world_x = constants.world_width - session.player.world_x;
+    crates.create_crates();
     socket.emit('start-game', { roomCode: session.roomCode });
 }
 

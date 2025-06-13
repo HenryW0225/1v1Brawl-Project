@@ -3,7 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { rooms, createRoom, joinRoom, leaveRoom, getRoom } from './rooms.js';
-import { startGame, movePlayer, addPlayerInfo, gameStates, player_hit} from './games.js';
+import { startGame, movePlayer, addPlayerInfo, gameStates, player_hit, update_health} from './games.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -66,7 +66,12 @@ io.on('connection', (socket) => {
     
 
     socket.on('player-hit', ({ roomCode, damage, bulletId }) => {
-        player_hit(roomCode, socket.id, damage, bulletId, io);
+        player_hit(roomCode, socket.id, bulletId, io);
+        update_health(roomCode, socket.id, damage, io);
+    });
+
+    socket.on('player-hit', ({ roomCode, damage }) => {
+        update_health(roomCode, socket.id, damage, io);
     });
 
     socket.on('disconnect', () => {

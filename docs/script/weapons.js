@@ -18,14 +18,14 @@ export const bulletStats = {
     1: { // Assault Rifle
         speed: 15,
         range: 60,
-        damage: 5,
+        damage: -5,
         width: 15,
         height: 30
     },
     2: { // Shotgun
         speed: 20,
         range: 20,
-        damage: 3,
+        damage: -3,
         width: 10,
         height: 20
     }
@@ -76,7 +76,6 @@ export function fire_shotgun() {
         cancelReload();
         input.firing.canFire = false;
         shotgun.ammo--;
-
         for (let i = 0; i < shotgun.bullet_amount; i++) {
             socket.emit('fire-bullet', {
                 roomCode: session.roomCode,
@@ -202,11 +201,21 @@ export function weapons_reset() {
     session.player.weapon = 1;
 }
 
+export let bandages = {
+    amount: 5,
+    bandageTimer: null,
+    healing: 15
+}
 
-
-
-
-
+export function use_bandage() {
+    if (input.keys["KeyE"] && bandages.amount > 0 && bandages.bandageTimer === null && session.player.health < 100) {
+        bandages.bandageTimer = setTimeout(() => {
+            socket.emit('used-bandage', { roomCode: session.roomCode, damage: bandage.healing });
+            bandages.amount--;
+            bandages.bandageTimer = null;
+        }, 2500);
+    }
+}
 
 
 

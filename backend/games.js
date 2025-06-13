@@ -33,9 +33,6 @@ export function addPlayerInfo(roomCode, player, io) {
         angle: player.angle || 0,
         health: player.health,
         weapon: player.weapon,
-        speed: player.speed,
-        width: player.width,
-        height: player.height
     };
 
     state.readyCount++;
@@ -59,16 +56,11 @@ export function movePlayer(socket_Id, roomCode, world_x, world_y, angle) {
     player.angle = angle;
 }
 
-export function player_hit(roomCode, socket_Id, damage, bulletId, io) {
+export function player_hit(roomCode, socket_Id, bulletId, io) {
     const room = gameStates[roomCode];
     if (!room) return;
 
-    room.players[socket_Id].health -= damage;
-    if (room.players[socket_Id].health < 0) {
-        room.players[socket_Id].health = 0;
-    }
     io.to(roomCode).emit('remove-bullet', (bulletId));
-    io.to(socket_Id).emit('update-health', { newHealth: room.players[socket_Id].health });
 
     if (room.players[socket_Id].health === 0) {
         delete room.players[socket_Id];
@@ -78,5 +70,14 @@ export function player_hit(roomCode, socket_Id, damage, bulletId, io) {
             delete gameStates[roomCode]; 
         }
     }
+}
+
+export function update_health(roomCode, socket_Id, damage, io) {
+    const room = gameStates[roomCode];
+    if (!room) return;
+
+    room.players[socket_Id].health += damage;
+    room.players[socket_Id].health = Math.max(Math.min(100, room.players[socket_Id].health), 0);
+    io.to(socket_Id).emit('update-health', { newHealth: room.players[socket_Id].health });
 }
 

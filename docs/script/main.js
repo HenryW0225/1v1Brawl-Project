@@ -50,6 +50,7 @@ socket.on('game-started', () => {
     gameLoop.start_game_loop();
     document.getElementById('healthBar').style.width = 100 + '%';
     document.getElementById('healthBarText').textContent = 100 + ' / 100';
+
     socket.emit('add-player-info', { roomCode: session.roomCode, player: session.player });
     document.getElementById("loadingPage").style.display = "none";
     if (images.originalworldmapImg.complete) {

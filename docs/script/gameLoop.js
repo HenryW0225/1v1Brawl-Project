@@ -19,8 +19,10 @@ export function game_loop(timestamp) {
     if (!game_running) {
         return;
     }
+
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
+    document.getElementById("bandagesAmount").textContent = weapons.bandages.amount; 
 
     layout.background_map();
     players.move_player_locally();
@@ -35,6 +37,8 @@ export function game_loop(timestamp) {
     else if (session.player.weapon === 2) {
         weapons.fire_shotgun();
     }
+
+    weapons.use_bandage();
     weapons.switch_weapons();
     weapons.weapons_reload();
     weapons.move_bullets();

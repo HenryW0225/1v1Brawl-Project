@@ -199,6 +199,7 @@ export function weapons_reset() {
     clearTimeout(arSlowTimeoutId);
     clearTimeout(sgSlowTimeoutId);
     session.player.speed = 5;
+    session.player.weapon = 1;
 }
 
 

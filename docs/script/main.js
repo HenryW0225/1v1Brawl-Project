@@ -74,7 +74,7 @@ socket.on('bullet-fired', (bullet) => {
     weapons.add_bullet(bullet);
 });
 
-socket.on('update-health', (newHealth) => {
+socket.on('update-health', ({ newHealth} ) => {
     document.getElementById('healthBar').style.width = newHealth + '%';
     document.getElementById('healthBarText').textContent = newHealth + ' / 100';
 });

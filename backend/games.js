@@ -1,5 +1,5 @@
 export const gameStates = {};
-const TICK_RATE = 100; 
+const TICK_RATE = 50; 
 
 export function startGame(roomCode) {
     gameStates[roomCode] = {

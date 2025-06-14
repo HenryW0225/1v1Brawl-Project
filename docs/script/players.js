@@ -73,7 +73,7 @@ export function draw_opponent_players() {
       const { prev, target, timestamp } = opponent;
   
       const elapsed = now - timestamp;
-      const interp = Math.min(elapsed / 100, 1); 
+      const interp = Math.min(elapsed / 50, 1); 
   
       const world_x = lerp(prev.world_x, target.world_x, interp);
       const world_y = lerp(prev.world_y, target.world_y, interp);

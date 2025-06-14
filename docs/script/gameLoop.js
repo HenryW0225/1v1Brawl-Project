@@ -27,7 +27,7 @@ export function game_loop(timestamp) {
     layout.background_map();
     players.move_player_locally();
 
-    if (timestamp - lastServerUpdate >= 100) {
+    if (timestamp - lastServerUpdate >= 50) {
         players.update_player_server();
         lastServerUpdate = timestamp;
     }

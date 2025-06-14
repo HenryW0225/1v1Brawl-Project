@@ -5,25 +5,25 @@ export const helmetStats = {
     2: { color: '#F2F2F5', protection: 10 },
     3: { color: '#262626', protection: 15 },
     outer_color: '#000000',
-    inner_radius: 13,
-    outer_radius: 15,
-    offset_y: 7
+    inner_radius: 11,
+    outer_radius: 13,
+    offset_y: 6
 };
 
 export const vestStats = {
     1: '#c0c0c0',
     2: '#505050',
     3: '#000000',
-    outer_radius: 26.5
+    outer_radius: 25
 };
 
 export const backpackStats = {
     0: { 1: 10, 2: 2 }, 
     1: { 1: 15, 2: 3, offset_y: 10 },
-    2: { 1: 25, 2: 5, offset_y: 16 },
-    3: { 1: 40, 2: 8, offset_y: 22 },
+    2: { 1: 25, 2: 5, offset_y: 15 },
+    3: { 1: 40, 2: 8, offset_y: 20 },
     color: '#816537',
-    radius: 20
+    radius: 17
 };
 
 export let players_equipment = {

@@ -118,7 +118,7 @@ socket.on('crate-update-hp', ({ damage, crateId }) => {
     crates.update_crate_hp(crateId, damage);
 });
 
-socket.on('crate-destroyed', ({ crateId, playerId, new_equipment }) => {
+socket.on('remove-crate', ({ crateId, playerId, new_equipment }) => {
     crates.destroy_crate(crateId);
     equipment.update_player_equipment(playerId, new_equipment);
     weapons.update_ammo();

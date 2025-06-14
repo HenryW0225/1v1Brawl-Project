@@ -88,7 +88,7 @@ export function update_player_equipment(socket_Id, equipment) {
 
 export function equipment_upgrade(socket_Id) {
     const equipment = players_equipment[socket_Id];
-    if (!equipment) return;
+    if (!equipment) return null;
 
     const upgradeable = [];
 
@@ -96,9 +96,11 @@ export function equipment_upgrade(socket_Id) {
     if (equipment.vest < 3) upgradeable.push('vest');
     if (equipment.backpack < 3) upgradeable.push('backpack');
 
-    if (upgradeable.length === 0) return; 
+    if (upgradeable.length === 0) return null;
 
     const type = upgradeable[Math.floor(Math.random() * upgradeable.length)];
-    const upgradeAmount = Math.floor(Math.random() * 3) + 1; 
+    const upgradeAmount = Math.floor(Math.random() * 3) + 1;
     equipment[type] = Math.min(3, equipment[type] + upgradeAmount);
+
+    return { ...equipment };
 }

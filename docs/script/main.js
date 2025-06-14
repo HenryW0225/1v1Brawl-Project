@@ -5,6 +5,7 @@ import * as images from './images.js';
 import * as session from './session.js';
 import * as weapons from './weapons.js';
 import * as input from './input.js';
+import * as equipment from './equipment.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -101,4 +102,8 @@ socket.on('remove-bullet', (bulletId) => {
     if (index !== -1) {
         weapons.bullets.splice(index, 1);
     }
+});
+
+socket.on('add-player-equipment', (socket_Id) => {
+    equipment.update_player_equipment(socket_Id, {helmet: 3, vest: 3, backpack: 3})
 });

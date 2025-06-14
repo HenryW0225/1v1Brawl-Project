@@ -47,6 +47,7 @@ io.on('connection', (socket) => {
 
     socket.on('add-player-info', ({ roomCode, player }) => {
         addPlayerInfo(roomCode, player, io);
+        io.to(roomCode).emit('add-player-equipment', socket.id);
     });
 
     socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {

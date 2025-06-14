@@ -52,7 +52,10 @@ export function draw_player() {
     constants.ctx.save();
     constants.ctx.translate(offsetX, offsetY);
     constants.ctx.rotate(session.player.angle);
+    equipment.draw_players_vest(session.player.socket_Id);
+    equipment.draw_players_backpack(session.player.socket_Id);
     constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+    equipment.draw_players_helmet(session.player.socket_Id);
     constants.ctx.restore();
 }
 
@@ -88,7 +91,10 @@ export function draw_opponent_players() {
       constants.ctx.save();
       constants.ctx.translate(screen_x, screen_y);
       constants.ctx.rotate(angle);
+      equipment.draw_players_vest(id);
+      equipment.draw_players_backpack(id);
       constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+      equipment.draw_players_helmet(id);
       constants.ctx.restore();
     }
   }

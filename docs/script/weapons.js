@@ -104,7 +104,7 @@ export function fire_shotgun() {
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
     cancelReload();
-
+    session.player.speed = 5;
     if (session.player.weapon === 1 && assault_rife.ammo < 30) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {

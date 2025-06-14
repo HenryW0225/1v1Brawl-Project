@@ -8,7 +8,7 @@ let game_crates = {};
 
 export function create_crates() {
     const crateCount = Math.floor(Math.random() * 6) + 5;
-    const crateSize = 100;
+    const crateSize = 80;
     const halfSize = crateSize / 2;
     const maxAttempts = 1000;
     const created_crates = {};
@@ -121,7 +121,7 @@ export function bullet_check(bullet, damage) {
 }
 
 export function update_crate_hp(crateId, damage) {
-    game_crates[crateId].hp -= damage;
+    game_crates[crateId].hp += damage;
 }
 
 export function destroy_crate(crateId) {

@@ -10,6 +10,9 @@ import { socket } from './socket.js';
 // ===== Weapon & Bullet Data =====
 //
 
+export let ar_ammo = 0;
+export let sg_ammo = 0;
+
 export let assault_rife = {
     ammo: equipment.backpackStats[0].ar_ammo
 };

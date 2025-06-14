@@ -140,6 +140,8 @@ export function update_ammo() {
 
     ar_ammo = equipment.backpackStats[equip.backpack].ar_ammo;
     sg_ammo = equipment.backpackStats[equip.backpack].sg_ammo;
+    document.getElementById("arAmmoMax").textContent = ar_ammo;
+    document.getElementById("sgAmmoMax").textContent = sg_ammo;
 }
 
 
@@ -185,7 +187,8 @@ export function move_bullets() {
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,
                     damage: stats.damage,
-                    bulletId: bullet.bulletId
+                    bulletId: bullet.bulletId,
+                    protection: equipment.helmetStats[equipment.players_equipment[session.player.socket_Id].helmet].protection + equipment.vestStats[equipment.players_equipment[session.player.socket_Id].vest].protection
                 });
                 continue;
             }

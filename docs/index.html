@@ -38,15 +38,21 @@
             <div id="inventoryBar">
                 <div class="inventorySlot">
                     <img src="https://i.imgur.com/cVdeIGV.png" class="itemIcon" />
-                    <span class="itemText">AR: <span id="arAmmo">30</span>/30</span>
+                    <span class="itemText">
+                        AR: <span id="arAmmo">30</span>/<span id="arAmmoMax">30</span>
+                    </span>
                 </div>
                 <div class="inventorySlot">
                     <img src="https://i.imgur.com/0dBw0st.png" class="itemIcon" />
-                    <span class="itemText">SG: <span id="sgAmmo">5</span>/5</span>
+                    <span class="itemText">
+                        SG: <span id="sgAmmo">5</span>/<span id="sgAmmoMax">5</span>
+                    </span>
                 </div>
                 <div class="inventorySlot">
                     <img src="https://i.imgur.com/EjTuEyi.png" class="itemIcon" />
-                    <span class="itemText">SG: <span id="bandagesAmount">5</span>/5</span>
+                    <span class="itemText">
+                        Bandages: <span id="bandagesAmount">5</span>/5
+                    </span>
                 </div>
             </div>
             <div id="healthBarContainer">
@@ -54,7 +60,7 @@
                 <div id="healthBarText">100 / 100</div>
             </div>
         </div>
-    </div>
+    </div>    
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-Xyz..." crossorigin="anonymous"></script>
     <script src="script/main.js" type="module"></script>
 </body>

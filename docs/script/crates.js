@@ -102,14 +102,14 @@ export function bullet_check(bullet, damage) {
         const distance = Math.sqrt((crate.x - bullet.world_x) * (crate.x - bullet.world_x) + (crate.y - bullet.world_y) * (crate.y - bullet.world_y));
         if (distance < 55 && !bullet.hit) {
             bullet.hit = true;
-            if (crate.hp - damage <= 0 && !crate.used) {
+            if (crate.hp + damage <= 0 && !crate.used) {
                 crate.used = true;
                 const new_equipment = equipment.equipment_upgrade(session.player.socket_Id);
                 socket.emit('crate-destroyed', {
                     roomCode: session.roomCode,
                     crateId: id,
                     playerId: session.player.socket_Id,
-                    bulletId: bullet.id,
+                    bulletId: bullet.bulletId,
                     new_equipment: new_equipment
                 });
                 return;
@@ -118,7 +118,7 @@ export function bullet_check(bullet, damage) {
                 roomCode: session.roomCode,
                 damage: damage,
                 crateId: id,
-                bulletId: bullet.id
+                bulletId: bullet.bulletId
             });
         }
     }

@@ -66,13 +66,13 @@ io.on('connection', (socket) => {
     });
     
 
-    socket.on('player-hit', ({ roomCode, damage, bulletId }) => {
-        update_health(roomCode, socket.id, damage, io);
+    socket.on('player-hit', ({ roomCode, damage, bulletId, protection }) => {
+        update_health(roomCode, socket.id, damage, protection, io);
         player_hit(roomCode, socket.id, bulletId, io);
     });
 
     socket.on('used-bandage', ({ roomCode, damage }) => {
-        update_health(roomCode, socket.id, damage, io);
+        update_health(roomCode, socket.id, damage, 0, io);
     });
 
     socket.on('create-crates', ({ roomCode, new_crates }) => {

@@ -72,11 +72,11 @@ export function player_hit(roomCode, socket_Id, bulletId, io) {
     }
 }
 
-export function update_health(roomCode, socket_Id, damage, io) {
+export function update_health(roomCode, socket_Id, damage, protection, io) {
     const room = gameStates[roomCode];
     if (!room) return;
 
-    room.players[socket_Id].health += damage;
+    room.players[socket_Id].health += (1 - Math.min(100, protection)/100) * damage;
     room.players[socket_Id].health = Math.max(Math.min(100, room.players[socket_Id].health), 0);
     io.to(socket_Id).emit('update-health', { newHealth: room.players[socket_Id].health });
 }

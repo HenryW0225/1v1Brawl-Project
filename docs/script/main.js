@@ -82,6 +82,7 @@ socket.on('bullet-fired', (bullet) => {
 
 socket.on('update-health', ({ newHealth} ) => {
     session.player.health = newHealth;
+    newHealth = Math.ceil(newHealth);
     document.getElementById('healthBar').style.width = newHealth + '%';
     document.getElementById('healthBarText').textContent = newHealth + ' / 100';
 });
@@ -91,6 +92,7 @@ socket.on('game-over', () => {
     session.players_reset();
     weapons.weapons_reset();
     input.reset();
+    equipment.equipments_reset();
 
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";

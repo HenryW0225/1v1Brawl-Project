@@ -1,6 +1,7 @@
 import * as constants from './constants.js';
 
 export const helmetStats = {
+    0: { protection: 0 },
     1: { color: '#2F74FF', protection: 5 },
     2: { color: '#F2F2F5', protection: 10 },
     3: { color: '#262626', protection: 15 },
@@ -11,9 +12,10 @@ export const helmetStats = {
 };
 
 export const vestStats = {
-    1: '#c0c0c0',
-    2: '#505050',
-    3: '#000000',
+    0: { protection: 0 },
+    1: { color: '#c0c0c0', protection: 5 },
+    2: { color: '#505050', protection: 10 },
+    3: { color: '#000000', protection: 15 },
     outer_radius: 23.5
 };
 
@@ -52,7 +54,7 @@ export function draw_players_vest(socket_Id) {
     if (!equipment || equipment.vest === 0) return;
 
     const vestTier = equipment.vest;
-    constants.ctx.fillStyle = vestStats[vestTier];
+    constants.ctx.fillStyle = vestStats[vestTier].color;
     constants.ctx.beginPath();
     constants.ctx.arc(0, 1.5, vestStats.outer_radius, 0, 2 * Math.PI);
     constants.ctx.fill();
@@ -99,8 +101,14 @@ export function equipment_upgrade(socket_Id) {
     if (upgradeable.length === 0) return null;
 
     const type = upgradeable[Math.floor(Math.random() * upgradeable.length)];
-    const upgradeAmount = Math.floor(Math.random() * 3) + 1;
+    const upgradeAmount = Math.floor(Math.random() * 2) + 1;
     equipment[type] = Math.min(3, equipment[type] + upgradeAmount);
 
     return { ...equipment };
+}
+
+export function equipments_reset() {
+    for (let key in players_equipment) {
+        delete players_equipment[key];
+    }
 }

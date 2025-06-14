@@ -228,7 +228,7 @@ export function use_bandage() {
         bandages.bandageTimer = setTimeout(() => {
             socket.emit('used-bandage', {
                 roomCode: session.roomCode,
-                healAmount: bandages.healing
+                damage: bandages.healing
             });
             bandages.amount--;
             bandages.bandageTimer = null;

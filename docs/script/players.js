@@ -2,6 +2,7 @@ import * as images from './images.js';
 import * as input from './input.js';
 import * as constants from './constants.js';
 import * as session from './session.js';
+import * as equipment from './equipment.js';
 import { socket } from './socket.js';
 
 export function move_player_locally() {
@@ -58,7 +59,7 @@ export function draw_player() {
 function lerp(a, b, t) {
     return a + (b - a) * t;
 }
-  
+
 export function draw_opponent_players() {
     const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
     const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);

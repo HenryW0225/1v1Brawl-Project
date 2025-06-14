@@ -79,12 +79,14 @@ io.on('connection', (socket) => {
         io.to(roomCode).emit('crates-created', new_crates);
     });
 
-    socket.on('crate-hit', ({ roomCode, damage, crateId }) => {
+    socket.on('crate-hit', ({ roomCode, damage, crateId, bulletId }) => {
         io.to(roomCode).emit('crate-update-hp', {damage, crateId});
+        io.to(roomCode).emit('remove-bullet', (bulletId));
     });
 
-    socket.on('crate-destroyed', ({ roomCode, crateId, playerId, new_equipment }) => {
+    socket.on('crate-destroyed', ({ roomCode, crateId, playerId, bulletId, new_equipment }) => {
         io.to(roomCode).emit('remove-crate', {crateId, playerId, new_equipment});
+        io.to(roomCode).emit('remove-bullet', (bulletId));
     });
 
     socket.on('disconnect', () => {

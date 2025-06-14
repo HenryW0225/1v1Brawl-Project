@@ -265,8 +265,8 @@ export function use_bandage() {
 //
 
 export function weapons_reset() {
-    assault_rife.ammo = ar_ammo;
-    shotgun.ammo = sg_ammo;
+    assault_rife.ammo = equipment.backpackStats[0].ar_ammo;
+    shotgun.ammo = equipment.backpackStats[0].sg_ammo;
     bullets.length = 0;
     pendingBullets.length = 0;
     cancelReload();

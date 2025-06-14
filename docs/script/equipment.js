@@ -7,21 +7,21 @@ export const helmetStats = {
     outer_color: '#000000',
     inner_radius: 13,
     outer_radius: 15,
-    offset_x: -7
+    offset_y: -7
 };
 
 export const vestStats = {
     1: '#c0c0c0',
     2: '#505050',
     3: '#000000',
-    outer_radius: 28
+    outer_radius: 26.5
 };
 
 export const backpackStats = {
     0: { 1: 10, 2: 2 }, 
-    1: { 1: 15, 2: 3, offset_x: -10 },
-    2: { 1: 25, 2: 5, offset_x: -16 },
-    3: { 1: 40, 2: 8, offset_x: -22 },
+    1: { 1: 15, 2: 3, offset_y: -10 },
+    2: { 1: 25, 2: 5, offset_y: -16 },
+    3: { 1: 40, 2: 8, offset_y: -22 },
     color: '#816537',
     radius: 20
 };
@@ -36,7 +36,7 @@ export function draw_players_helmet(socket_Id) {
 
     constants.ctx.fillStyle = helmetStats.outer_color;
     constants.ctx.beginPath();
-    constants.ctx.arc(helmetStats.offset_x, 0, helmetStats.outer_radius, 0, 2 * Math.PI);
+    constants.ctx.arc(0, helmetStats[helmetTier], helmetStats.outer_radius, 0, 2 * Math.PI);
     constants.ctx.fill();
 
     const helmetTier = equipment.helmet;
@@ -62,11 +62,11 @@ export function draw_players_backpack(socket_Id) {
     if (!equipment || equipment.backpack === 0) return;
 
     const backpackTier = equipment.backpack;
-    const offsetX = backpackStats[backpackTier].offset_x;
+    const offsetY = backpackStats[backpackTier].offset_y;
 
     constants.ctx.fillStyle = backpackStats.color;
     constants.ctx.beginPath();
-    constants.ctx.arc(offsetX, 0, backpackStats.radius, 0, 2 * Math.PI);
+    constants.ctx.arc(0, offsetY, backpackStats.radius, 0, 2 * Math.PI);
     constants.ctx.fill();
 }
 

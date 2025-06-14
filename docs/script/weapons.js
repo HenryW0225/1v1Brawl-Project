@@ -10,15 +10,12 @@ import { socket } from './socket.js';
 // ===== Weapon & Bullet Data =====
 //
 
-export let ar_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].ar_ammo;
-export let sg_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].sg_ammo;
-
 export let assault_rife = {
-    ammo: ar_ammo
+    ammo: equipment.backpackStats[0].ar_ammo
 };
 
 export let shotgun = {
-    ammo: sg_ammo,
+    ammo: equipment.backpackStats[0].sg_ammo,
     bullet_amount: 7,
     spread: Math.PI / 16
 };

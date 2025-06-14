@@ -132,9 +132,16 @@ export function weapons_reload() {
 }
 
 export function update_ammo() {
-    ar_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].ar_ammo;
-    sg_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].sg_ammo;
+    const equip = equipment.players_equipment[session.player.socket_Id];
+    if (!equip) {
+        console.warn("Missing equipment for player:", session.player.socket_Id);
+        return;
+    }
+
+    ar_ammo = equipment.backpackStats[equip.backpack].ar_ammo;
+    sg_ammo = equipment.backpackStats[equip.backpack].sg_ammo;
 }
+
 
 //
 // ===== Switching Weapons =====

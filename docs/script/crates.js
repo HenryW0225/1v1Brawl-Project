@@ -85,7 +85,7 @@ export function draw_crates() {
             continue;
         }
 
-        ctx.drawImage(
+        constants.ctx.drawImage(
             images.crateImg,
             screenX,
             screenY,

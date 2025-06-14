@@ -10,9 +10,9 @@ export function update_room_code(code) {
 export function players_reset() {
     player.world_x = 250;
     player.world_y = constants.ctx_height;
-    angle = 0;
-    health = 100;
-    weapon = 1;
+    player.angle = 0;
+    player.health = 100;
+    player.weapon = 1;
     opponent_players = {};
 }
 

@@ -2,24 +2,30 @@ import * as images from './images.js';
 import * as input from './input.js';
 import * as constants from './constants.js';
 import * as session from './session.js';
+import * as equipment from './equipment.js';
+import * as crates from './crates.js';
 import { socket } from './socket.js';
 
 //
 // ===== Weapon & Bullet Data =====
 //
+
+export let ar_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].ar_ammo;
+export let sg_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].sg_ammo;
+
 export let assault_rife = {
-    ammo: 30
+    ammo: ar_ammo
 };
 
 export let shotgun = {
-    ammo: 5,
-    bullet_amount: 6,
+    ammo: sg_ammo,
+    bullet_amount: 7,
     spread: Math.PI / 16
 };
 
 export const bulletStats = {
     1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 }, // AR
-    2: { speed: 20, range: 20, damage: -3, width: 10, height: 20 }  // Shotgun
+    2: { speed: 20, range: 20, damage: -5, width: 10, height: 20 }  // Shotgun
 };
 
 export let bullets = [];
@@ -105,24 +111,29 @@ export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
     cancelReload();
     session.player.speed = 5;
-    if (session.player.weapon === 1 && assault_rife.ammo < 30) {
+    if (session.player.weapon === 1 && assault_rife.ammo < ar_ammo) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {
-            assault_rife.ammo = 30;
+            assault_rife.ammo = ar_ammo;
             isReloading = false;
             arReloadTimeoutId = null;
         }, 2000);
-    } else if (session.player.weapon === 2 && shotgun.ammo < 5) {
+    } else if (session.player.weapon === 2 && shotgun.ammo < sg_ammo) {
         isReloading = true;
         sgReloadIntervalId = setInterval(() => {
-            if (shotgun.ammo < 5) {
+            if (shotgun.ammo < sg_ammo) {
                 shotgun.ammo++;
             }
-            if (shotgun.ammo >= 5) {
+            if (shotgun.ammo >= sg_ammo) {
                 cancelReload();
             }
         }, 1000);
     }
+}
+
+export function update_ammo() {
+    ar_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].ar_ammo;
+    sg_ammo = equipment.backpackStats[equipment.players_equipment[session.player.socket_Id].backpack].sg_ammo;
 }
 
 //
@@ -169,9 +180,11 @@ export function move_bullets() {
                     damage: stats.damage,
                     bulletId: bullet.bulletId
                 });
-                bullets.splice(i, 1); // Remove bullet on hit
                 continue;
             }
+        }
+        else {
+            crates.bullet_check(bullet, stats.damage);
         }
 
         if (bullet.distance > stats.range) {
@@ -240,9 +253,10 @@ export function use_bandage() {
 //
 // ===== Reset State =====
 //
+
 export function weapons_reset() {
-    assault_rife.ammo = 30;
-    shotgun.ammo = 5;
+    assault_rife.ammo = ar_ammo;
+    shotgun.ammo = sg_ammo;
     bullets.length = 0;
     pendingBullets.length = 0;
     cancelReload();

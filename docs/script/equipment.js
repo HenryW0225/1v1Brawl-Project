@@ -14,16 +14,16 @@ export const vestStats = {
     1: '#c0c0c0',
     2: '#505050',
     3: '#000000',
-    outer_radius: 25
+    outer_radius: 23.5
 };
 
 export const backpackStats = {
-    0: { 1: 10, 2: 2 }, 
-    1: { 1: 15, 2: 3, offset_y: 10 },
-    2: { 1: 25, 2: 5, offset_y: 15 },
-    3: { 1: 40, 2: 8, offset_y: 20 },
+    0: { ar_ammo: 10, sg_ammo: 2 }, 
+    1: { ar_ammo: 15, sg_ammo: 3, offset_y: 10 },
+    2: { ar_ammo: 25, sg_ammo: 5, offset_y: 14 },
+    3: { ar_ammo: 40, sg_ammo: 8, offset_y: 18 },
     color: '#816537',
-    radius: 17
+    radius: 18
 };
 
 export let players_equipment = {
@@ -84,4 +84,21 @@ export function update_player_equipment(socket_Id, equipment) {
     if ('backpack' in equipment) {
         players_equipment[socket_Id].backpack = equipment.backpack;
     }
+}
+
+export function equipment_upgrade(socket_Id) {
+    const equipment = players_equipment[socket_Id];
+    if (!equipment) return;
+
+    const upgradeable = [];
+
+    if (equipment.helmet < 3) upgradeable.push('helmet');
+    if (equipment.vest < 3) upgradeable.push('vest');
+    if (equipment.backpack < 3) upgradeable.push('backpack');
+
+    if (upgradeable.length === 0) return; 
+
+    const type = upgradeable[Math.floor(Math.random() * upgradeable.length)];
+    const upgradeAmount = Math.floor(Math.random() * 3) + 1; 
+    equipment[type] = Math.min(3, equipment[type] + upgradeAmount);
 }

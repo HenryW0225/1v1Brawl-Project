@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
     socket.on('add-player-info', ({ roomCode, player }) => {
         addPlayerInfo(roomCode, player, io);
-        io.to(roomCode).emit('add-player-equipment', socket.id);
+        io.to(roomCode).emit('update-player-equipment', socket.id, {helmet: 0, vest: 0, backpack: 0});
     });
 
     socket.on('fire-bullet', ({ roomCode, world_x, world_y, angle, type, distance }) => {
@@ -67,12 +67,24 @@ io.on('connection', (socket) => {
     
 
     socket.on('player-hit', ({ roomCode, damage, bulletId }) => {
-        player_hit(roomCode, socket.id, bulletId, io);
         update_health(roomCode, socket.id, damage, io);
+        player_hit(roomCode, socket.id, bulletId, io);
     });
 
     socket.on('used-bandage', ({ roomCode, damage }) => {
         update_health(roomCode, socket.id, damage, io);
+    });
+
+    socket.on('create-crates', ({ roomCode, new_crates }) => {
+        io.to(roomCode).emit('crates-created', new_crates);
+    });
+
+    socket.on('crate-hit', ({ roomCode, damage, crateId }) => {
+        io.to(roomCode).emit('crate-update-hp', {damage, crateId});
+    });
+
+    socket.on('crate-destroyed', ({ roomCode, crateId, playerId, new_equipment }) => {
+        io.to(roomCode).emit('remove-crate', {crateId, playerId, new_equipment});
     });
 
     socket.on('disconnect', () => {

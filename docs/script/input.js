@@ -33,8 +33,6 @@ window.addEventListener("mouseup", () => {
 });
 
 export function reset() {
-    mouseX = 0;
-    mouseY = 0;
     firing.mouseDown = false;
     firing.canFire = true;
     for (let k in keys) delete keys[k];

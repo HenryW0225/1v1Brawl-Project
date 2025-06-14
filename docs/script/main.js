@@ -6,6 +6,7 @@ import * as session from './session.js';
 import * as weapons from './weapons.js';
 import * as input from './input.js';
 import * as equipment from './equipment.js';
+import * as crates from './crates.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -87,13 +88,13 @@ socket.on('update-health', ({ newHealth} ) => {
 
 socket.on('game-over', () => {
     gameLoop.stop_game_loop();
+    session.players_reset();
+    weapons.weapons_reset();
+    input.reset();
 
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
-        session.players_reset();
-        weapons.weapons_reset();
-        input.reset();
     }, 4000); 
 });
 
@@ -104,6 +105,20 @@ socket.on('remove-bullet', (bulletId) => {
     }
 });
 
-socket.on('add-player-equipment', (socket_Id) => {
-    equipment.update_player_equipment(socket_Id, {helmet: 3, vest: 3, backpack: 3})
+socket.on('update-player-equipment', (socket_Id, temp) => {
+    equipment.update_player_equipment(socket_Id, {helmet: temp.helmet, vest: temp.vest, backpack: temp.backpack});
+    weapons.update_ammo();
+});
+
+socket.on('crates-created', (new_crates) => {
+    crates.add_crates(new_crates);
+});
+
+socket.on('crate-update-hp', ({ damage, crateId }) => {
+    crates.update_crate_hp(crateId, damage);
+});
+
+socket.on('crate-destroyed', ({ crateId, playerId, new_equipment }) => {
+    crates.destroy_crate(crateId);
+    equipment.update_player_equipment(playerId, new_equipment);
 });

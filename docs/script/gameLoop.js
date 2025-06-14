@@ -2,6 +2,7 @@ import * as weapons from './weapons.js';
 import * as players from './players.js';
 import * as layout from './layout.js';
 import * as session from './session.js';
+import * as crates from './crates.js';
 
 let lastServerUpdate = 0;
 
@@ -43,6 +44,8 @@ export function game_loop(timestamp) {
     weapons.weapons_reload();
     weapons.move_bullets();
     weapons.draw_bullets();
+
+    crates.draw_crates();
 
     players.draw_player();
     players.draw_opponent_players();

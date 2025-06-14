@@ -46,7 +46,8 @@ export function enter_button() {
 
 export function start_button() {
     session.player.world_x = constants.world_width - session.player.world_x;
-    crates.create_crates();
+    const newCrates = crates.create_crates();
+    socket.emit('create-crates', { roomCode: session.roomCode, new_crates: newCrates});
     socket.emit('start-game', { roomCode: session.roomCode });
 }
 

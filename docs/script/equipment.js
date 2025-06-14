@@ -34,15 +34,16 @@ export function draw_players_helmet(socket_Id) {
     const equipment = players_equipment[socket_Id];
     if (!equipment || equipment.helmet === 0) return;
 
+    const helmetTier = equipment.helmet;
+
     constants.ctx.fillStyle = helmetStats.outer_color;
     constants.ctx.beginPath();
-    constants.ctx.arc(0, helmetStats[helmetTier], helmetStats.outer_radius, 0, 2 * Math.PI);
+    constants.ctx.arc(0, helmetStats.offset_y, helmetStats.outer_radius, 0, 2 * Math.PI);
     constants.ctx.fill();
 
-    const helmetTier = equipment.helmet;
     constants.ctx.fillStyle = helmetStats[helmetTier].color;
     constants.ctx.beginPath();
-    constants.ctx.arc(helmetStats.offset_x, 0, helmetStats.inner_radius, 0, 2 * Math.PI);
+    constants.ctx.arc(0, helmetStats.offset_y, helmetStats.inner_radius, 0, 2 * Math.PI);
     constants.ctx.fill();
 }
 

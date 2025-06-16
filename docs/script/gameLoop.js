@@ -25,6 +25,7 @@ export function game_loop(timestamp) {
 
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
+    document.getElementById("msAmmo").textContent = weapons.mosin.ammo;
     document.getElementById("bandagesAmount").textContent = weapons.bandages.amount; 
 
     layout.background_map();
@@ -40,10 +41,13 @@ export function game_loop(timestamp) {
     else if (session.player.weapon === 2) {
         weapons.fire_shotgun();
     }
+    else if (session.player.weapon === 3) {
+        weapons.fire_mosin();
+    }
 
-    if (Math.random() < 0.01 && timestamp - lastCrateSpawn >= 1000) {
+    if (Math.random() < 0.0025 && timestamp - lastCrateSpawn >= 1000) {
         lastCrateSpawn = timestamp;
-        const newCrates = crates.create_crates(0, 1);
+        const newCrates = crates.create_crates(1, 1);
         socket.emit('create-crates', { roomCode: session.roomCode, new_crates: newCrates});
     }
 

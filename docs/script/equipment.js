@@ -20,10 +20,10 @@ export const vestStats = {
 };
 
 export const backpackStats = {
-    0: { ar_ammo: 10, sg_ammo: 2 }, 
-    1: { ar_ammo: 15, sg_ammo: 3, offset_y: 10 },
-    2: { ar_ammo: 25, sg_ammo: 5, offset_y: 14 },
-    3: { ar_ammo: 40, sg_ammo: 8, offset_y: 18 },
+    0: { ar_ammo: 10, sg_ammo: 2, ms_ammo: 1}, 
+    1: { ar_ammo: 15, sg_ammo: 3, ms_ammo: 2, offset_y: 10 },
+    2: { ar_ammo: 25, sg_ammo: 5, ms_ammo: 3, offset_y: 14 },
+    3: { ar_ammo: 40, sg_ammo: 8, ms_ammo: 5, offset_y: 18 },
     color: '#816537',
     radius: 18
 };

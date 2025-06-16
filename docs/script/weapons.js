@@ -8,6 +8,7 @@ import { socket } from './socket.js';
 
 export let ar_ammo = 0;
 export let sg_ammo = 0;
+export let ms_ammo = 0;
 
 export let assault_rife = {
     ammo: equipment.backpackStats[0].ar_ammo
@@ -19,10 +20,14 @@ export let shotgun = {
     spread: Math.PI / 16
 };
 
+export let mosin = {
+    ammo: equipment.backpackStats[0].ms_ammo
+}
+
 export const bulletStats = {
     1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 },
     2: { speed: 20, range: 25, damage: -5, width: 10, height: 20 },
-    3: { speed: 30, range: 80, damage: -25, width: 15, height: 30} // mosin
+    3: { speed: 30, range: 80, damage: -30, width: 20, height: 35} 
 };
 
 export let bullets = [];
@@ -31,14 +36,18 @@ let pendingBullets = [];
 let isReloading = false;
 let arReloadTimeoutId = null;
 let sgReloadIntervalId = null;
+let msReloadIntervalId = null;
 let arSlowTimeoutId = null;
 let sgSlowTimeoutId = null;
+let msSlowTimeoutId = null;
 
 function cancelReload() {
     if (arReloadTimeoutId) clearTimeout(arReloadTimeoutId);
     if (sgReloadIntervalId) clearInterval(sgReloadIntervalId);
+    if (msReloadIntervalId) clearInterval(msReloadIntervalId);
     arReloadTimeoutId = null;
     sgReloadIntervalId = null;
+    msReloadIntervalId = null;
     isReloading = false;
     if (bandages.bandageTimer) clearTimeout(bandages.bandageTimer);
     bandages.bandageTimer = null;
@@ -93,6 +102,25 @@ export function fire_shotgun() {
     }
 }
 
+export function fire_mosin() {
+    if (input.firing.mouseDown && input.firing.canFire && mosin.ammo > 0 && msSlowTimeoutId === null) {
+        cancelReload();
+        input.firing.canFire = false;
+        mosin.ammo--;
+
+        socket.emit('fire-bullet', {
+            roomCode: session.roomCode,
+            world_x: session.player.world_x,
+            world_y: session.player.world_y,
+            angle: session.player.angle - Math.PI / 2,
+            type: 3,
+            distance: 0
+        });
+
+        slowPlayer(msSlowTimeoutId, 1500, id => msSlowTimeoutId = id);
+    }
+}
+
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
     cancelReload();
@@ -104,7 +132,7 @@ export function weapons_reload() {
             assault_rife.ammo = ar_ammo;
             isReloading = false;
             arReloadTimeoutId = null;
-        }, 2000);
+        }, 1750);
     } else if (session.player.weapon === 2 && shotgun.ammo < sg_ammo) {
         isReloading = true;
         sgReloadIntervalId = setInterval(() => {
@@ -114,7 +142,18 @@ export function weapons_reload() {
             if (shotgun.ammo >= sg_ammo) {
                 cancelReload();
             }
-        }, 1000);
+        }, 750);
+    }
+    else if (session.player.weapon === 3 && mosin.ammo < ms_ammo) {
+        isReloading = true;
+        msReloadIntervalId = setInterval(() => {
+            if (mosin.ammo < ms_ammo) {
+                mosin.ammo++;
+            }
+            if (mosin.ammo >= ms_ammo) {
+                cancelReload();
+            }
+        }, 800);
     }
 }
 
@@ -127,9 +166,11 @@ export function update_ammo() {
 
     ar_ammo = equipment.backpackStats[equip.backpack].ar_ammo;
     sg_ammo = equipment.backpackStats[equip.backpack].sg_ammo;
+    ms_ammo = equipment.backpackStats[equip.backpack].ms_ammo;
 
     document.getElementById("arAmmoMax").textContent = ar_ammo;
     document.getElementById("sgAmmoMax").textContent = sg_ammo;
+    document.getElementById("msAmmoMax").textContent = ms_ammo;
 }
 
 export function switch_weapons() {
@@ -140,6 +181,10 @@ export function switch_weapons() {
     } else if (input.keys["Digit2"] && session.player.weapon !== 2) {
         cancelReload();
         session.player.weapon = 2;
+        session.player.speed = 5;
+    } else if (input.keys["Digit3"] && session.player.weapon  !== 3) {
+        cancelReload();
+        session.player.weapon = 3;
         session.player.speed = 5;
     }
 }
@@ -240,6 +285,7 @@ export function use_bandage() {
 export function weapons_reset() {
     assault_rife.ammo = equipment.backpackStats[0].ar_ammo;
     shotgun.ammo = equipment.backpackStats[0].sg_ammo;
+    mosin.ammo = equipment.backpackStats[0].ms_ammo;
     bullets.length = 0;
     pendingBullets.length = 0;
     cancelReload();

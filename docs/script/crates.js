@@ -100,7 +100,7 @@ export function bullet_check(bullet, damage) {
     for (const id in game_crates) {
         const crate = game_crates[id];
         const distance = Math.sqrt((crate.x - bullet.world_x) * (crate.x - bullet.world_x) + (crate.y - bullet.world_y) * (crate.y - bullet.world_y));
-        if (distance < 55 && !bullet.hit) {
+        if (distance < crate.width/2 + 5 && !bullet.hit) {
             bullet.hit = true;
             if (crate.hp + damage <= 0 && !crate.used) {
                 crate.used = true;
@@ -126,6 +126,8 @@ export function bullet_check(bullet, damage) {
 
 export function update_crate_hp(crateId, damage) {
     game_crates[crateId].hp += damage;
+    game_crates[crateId].width += damage * 1.5;
+    game_crates[crateId].height += damage * 1.5;
 }
 
 export function destroy_crate(crateId) {

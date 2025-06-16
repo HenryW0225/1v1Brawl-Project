@@ -6,10 +6,6 @@ import * as equipment from './equipment.js';
 import * as crates from './crates.js';
 import { socket } from './socket.js';
 
-//
-// ===== Weapon & Bullet Data =====
-//
-
 export let ar_ammo = 0;
 export let sg_ammo = 0;
 
@@ -24,16 +20,14 @@ export let shotgun = {
 };
 
 export const bulletStats = {
-    1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 }, // AR
-    2: { speed: 20, range: 20, damage: -5, width: 10, height: 20 }  // Shotgun
+    1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 },
+    2: { speed: 20, range: 25, damage: -5, width: 10, height: 20 },
+    3: { speed: 30, range: 80, damage: -25, width: 15, height: 30} // mosin
 };
 
 export let bullets = [];
 let pendingBullets = [];
 
-//
-// ===== Timers & Reloading =====
-//
 let isReloading = false;
 let arReloadTimeoutId = null;
 let sgReloadIntervalId = null;
@@ -43,11 +37,9 @@ let sgSlowTimeoutId = null;
 function cancelReload() {
     if (arReloadTimeoutId) clearTimeout(arReloadTimeoutId);
     if (sgReloadIntervalId) clearInterval(sgReloadIntervalId);
-
     arReloadTimeoutId = null;
     sgReloadIntervalId = null;
     isReloading = false;
-
     if (bandages.bandageTimer) clearTimeout(bandages.bandageTimer);
     bandages.bandageTimer = null;
 }
@@ -61,9 +53,6 @@ function slowPlayer(timeoutId, duration, setIdFn) {
     }, duration));
 }
 
-//
-// ===== Firing =====
-//
 export function fire_assault_rife() {
     if (input.firing.mouseDown && input.firing.canFire && assault_rife.ammo > 0) {
         cancelReload();
@@ -104,13 +93,11 @@ export function fire_shotgun() {
     }
 }
 
-//
-// ===== Reloading =====
-//
 export function weapons_reload() {
     if (!input.keys["KeyR"] || isReloading) return;
     cancelReload();
     session.player.speed = 5;
+
     if (session.player.weapon === 1 && assault_rife.ammo < ar_ammo) {
         isReloading = true;
         arReloadTimeoutId = setTimeout(() => {
@@ -140,14 +127,11 @@ export function update_ammo() {
 
     ar_ammo = equipment.backpackStats[equip.backpack].ar_ammo;
     sg_ammo = equipment.backpackStats[equip.backpack].sg_ammo;
+
     document.getElementById("arAmmoMax").textContent = ar_ammo;
     document.getElementById("sgAmmoMax").textContent = sg_ammo;
 }
 
-
-//
-// ===== Switching Weapons =====
-//
 export function switch_weapons() {
     if (input.keys["Digit1"] && session.player.weapon !== 1) {
         cancelReload();
@@ -162,9 +146,6 @@ export function switch_weapons() {
     }
 }
 
-//
-// ===== Bullet Management =====
-//
 export function add_bullet(bullet) {
     pendingBullets.push(bullet);
 }
@@ -182,18 +163,19 @@ export function move_bullets() {
             const dx = bullet.world_x - session.player.world_x;
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
+
             if (dist < 35 && !bullet.hit) {
                 bullet.hit = true;
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,
                     damage: stats.damage,
                     bulletId: bullet.bulletId,
-                    protection: equipment.helmetStats[equipment.players_equipment[session.player.socket_Id].helmet].protection + equipment.vestStats[equipment.players_equipment[session.player.socket_Id].vest].protection
+                    protection: equipment.helmetStats[equipment.players_equipment[session.player.socket_Id].helmet].protection +
+                                equipment.vestStats[equipment.players_equipment[session.player.socket_Id].vest].protection
                 });
                 continue;
             }
-        }
-        else {
+        } else {
             crates.bullet_check(bullet, stats.damage);
         }
 
@@ -228,9 +210,6 @@ export function draw_bullets() {
     }
 }
 
-//
-// ===== Healing (Bandages) =====
-//
 export let bandages = {
     amount: 5,
     bandageTimer: null,
@@ -260,10 +239,6 @@ export function use_bandage() {
     }
 }
 
-//
-// ===== Reset State =====
-//
-
 export function weapons_reset() {
     assault_rife.ammo = equipment.backpackStats[0].ar_ammo;
     shotgun.ammo = equipment.backpackStats[0].sg_ammo;
@@ -272,6 +247,7 @@ export function weapons_reset() {
     cancelReload();
     clearTimeout(arSlowTimeoutId);
     clearTimeout(sgSlowTimeoutId);
+    sgSlowTimeoutId = null;
     bandages.amount = 5;
     session.player.speed = 5;
     session.player.weapon = 1;

@@ -16,7 +16,7 @@ export const vestStats = {
     1: { color: '#c0c0c0', protection: 5 },
     2: { color: '#505050', protection: 10 },
     3: { color: '#000000', protection: 15 },
-    outer_radius: 23.5
+    outer_radius: 24.5
 };
 
 export const backpackStats = {

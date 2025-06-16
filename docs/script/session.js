@@ -8,17 +8,18 @@ export function update_room_code(code) {
 }
 
 export function players_reset() {
-    player.world_x = 250;
-    player.world_y = constants.ctx_height;
+    player.world_x = constants.world_width/2;
+    player.world_y = constants.world_height/2;
     player.angle = 0;
     player.health = 100;
     player.weapon = 1;
+    player.speed = 5;
     opponent_players = {};
 }
 
 export let player = {
-    world_x: 250,
-    world_y: constants.ctx_height,
+    world_x: constants.world_width/2,
+    world_y: constants.world_height/2,
     angle: 0,
     health: 100,
     weapon: 1,

@@ -103,21 +103,19 @@ socket.on('game-over', () => {
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
         sounds.playSound(sounds.backgroundMusic);
-    }, 2000); 
+    }, 3500); 
 });
 
-socket.on('player-death', (socket_Id) => {
-    if (socket_Id === session.player.socket_Id) {
-        layout.background_map();
-        gameLoop.stop_game_loop();
-        weapons.move_bullets();
-        weapons.draw_bullets();
-        crates.draw_crates();
-        players.draw_opponent_players();
+socket.on('player-death', () => {
+    gameLoop.stop_game_loop();
+    layout.background_map();
+    weapons.move_bullets();
+    weapons.draw_bullets();
+    crates.draw_crates();
+    players.draw_opponent_players();
 
-        sounds.playSound(sounds.playerDeathSound);
-    } 
-});
+    sounds.playSound(sounds.playerDeathSound);
+}); 
 
 socket.on('remove-bullet', (bulletId) => {
     const index = weapons.bullets.findIndex(bullet => bullet.bulletId === bulletId);
@@ -165,4 +163,14 @@ socket.on('proximity-play-sound', ({ audio, world_x, world_y, distance }) => {
             sounds.playClonedSound(sounds.bulletHitSound);
         }
     }
+});
+
+socket.on('victory', () => {
+    sounds.playSound(sounds.victorySound);
+    //victory screen
+}); 
+
+socket.on('starting-position', ({ world_x, world_y }) => {
+    session.player.world_x = world_x;
+    session.player.world_y = world_y;
 });

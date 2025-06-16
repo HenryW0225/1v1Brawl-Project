@@ -49,6 +49,7 @@ function cancelReload() {
     arReloadTimeoutId = null;
     sgReloadIntervalId = null;
     msReloadIntervalId = null;
+    
     isReloading = false;
     if (bandages.bandageTimer) clearTimeout(bandages.bandageTimer);
     bandages.bandageTimer = null;
@@ -242,9 +243,7 @@ export function move_bullets() {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < 30 && !bullet.hit) {
-                if (bullet.type !== 3) {
-                    bullet.hit = true;
-                }
+                bullet.hit = true;
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,
                     damage: stats.damage,

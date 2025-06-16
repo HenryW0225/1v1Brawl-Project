@@ -115,9 +115,7 @@ export function bullet_check(bullet, damage) {
         const crate = game_crates[id];
         const distance = Math.sqrt((crate.x - bullet.world_x) * (crate.x - bullet.world_x) + (crate.y - bullet.world_y) * (crate.y - bullet.world_y));
         if (distance < crate.width/2 + 5 && !bullet.hit) {
-            if (bullet.type !== 3) {
-                bullet.hit = true;
-            }
+            bullet.hit = true;
             if (crate.hp + damage <= 0 && !crate.used) {
                 crate.used = true;
                 const new_equipment = equipment.equipment_upgrade(session.player.socket_Id);

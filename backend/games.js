@@ -37,7 +37,7 @@ export function addPlayerInfo(roomCode, player, io) {
 
     state.readyCount++;
 
-    if (state.readyCount >= 2 && !state.updateStarted) {
+    if (state.readyCount >= 4 && !state.updateStarted) {
         state.updateStarted = true;
         startUpdating(roomCode, io);
         console.log(`Started update loop for room ${roomCode}`);
@@ -64,6 +64,7 @@ export function player_hit(roomCode, socket_Id, bulletId, io) {
 
     if (room.players[socket_Id].health === 0) {
         delete room.players[socket_Id];
+        io.to(roomCode).emit('player-death', (socket_Id));
         if (Object.keys(room.players).length < 2) {
             room.gameOver = true;
             io.to(roomCode).emit('game-over');

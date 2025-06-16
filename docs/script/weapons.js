@@ -4,6 +4,7 @@ import * as constants from './constants.js';
 import * as session from './session.js';
 import * as equipment from './equipment.js';
 import * as crates from './crates.js';
+import * as sounds from './sounds.js';
 import { socket } from './socket.js';
 
 export let ar_ammo = 0;
@@ -51,6 +52,7 @@ function cancelReload() {
     isReloading = false;
     if (bandages.bandageTimer) clearTimeout(bandages.bandageTimer);
     bandages.bandageTimer = null;
+    sounds.cancelReload();
 }
 
 function slowPlayer(timeoutId, duration, setIdFn) {
@@ -65,6 +67,7 @@ function slowPlayer(timeoutId, duration, setIdFn) {
 export function fire_assault_rife() {
     if (input.firing.mouseDown && input.firing.canFire && assault_rife.ammo > 0) {
         cancelReload();
+        sounds.playClonedSound(sounds.arshotSound);
         input.firing.canFire = false;
         assault_rife.ammo--;
 
@@ -84,6 +87,7 @@ export function fire_assault_rife() {
 export function fire_shotgun() {
     if (input.firing.mouseDown && input.firing.canFire && shotgun.ammo > 0 && sgSlowTimeoutId === null) {
         cancelReload();
+        sounds.playSound(sounds.sgshotSound);
         input.firing.canFire = false;
         shotgun.ammo--;
 
@@ -105,6 +109,7 @@ export function fire_shotgun() {
 export function fire_mosin() {
     if (input.firing.mouseDown && input.firing.canFire && mosin.ammo > 0 && msSlowTimeoutId === null) {
         cancelReload();
+        sounds.playSound(sounds.msshotSound);
         input.firing.canFire = false;
         mosin.ammo--;
 
@@ -128,6 +133,7 @@ export function weapons_reload() {
 
     if (session.player.weapon === 1 && assault_rife.ammo < ar_ammo) {
         isReloading = true;
+        sounds.playSound(sounds.arReloadingSound);
         arReloadTimeoutId = setTimeout(() => {
             assault_rife.ammo = ar_ammo;
             isReloading = false;
@@ -135,7 +141,9 @@ export function weapons_reload() {
         }, 1750);
     } else if (session.player.weapon === 2 && shotgun.ammo < sg_ammo) {
         isReloading = true;
+        sounds.playSound(sounds.sgReloadingSound);
         sgReloadIntervalId = setInterval(() => {
+            sounds.playSound(sounds.sgReloadingSound);
             if (shotgun.ammo < sg_ammo) {
                 shotgun.ammo++;
             }
@@ -146,7 +154,9 @@ export function weapons_reload() {
     }
     else if (session.player.weapon === 3 && mosin.ammo < ms_ammo) {
         isReloading = true;
+        sounds.playSound(sounds.msReloadingSound);
         msReloadIntervalId = setInterval(() => {
+            sounds.playSound(sounds.msReloadingSound);
             if (mosin.ammo < ms_ammo) {
                 mosin.ammo++;
             }

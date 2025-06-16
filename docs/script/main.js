@@ -96,16 +96,25 @@ socket.on('game-over', () => {
     equipment.equipments_reset();
     crates.reset_crates();
     sounds.reset_sounds();
-    
+
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
-    }, 4000); 
+    }, 2000); 
+});
+
+socket.on('player-death', (socket_Id) => {
+    if (session.opponent_players && socket_Id in session.opponent_players) {
+        delete session.opponent_players[socket_Id];
+    }
+    if (socket_Id === session.player.socket_Id) {
+        sounds.playSound(sounds.playerDeathSound);
+    } 
 });
 
 socket.on('remove-bullet', (bulletId) => {
     const index = weapons.bullets.findIndex(bullet => bullet.bulletId === bulletId);
-    if (index !== -1 && weapons.bullets[index].type !== 3) {
+    if (index !== -1) {
         weapons.bullets.splice(index, 1);
     }
 });

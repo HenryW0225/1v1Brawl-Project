@@ -9,7 +9,7 @@ export function createRoom(socketId, username) {
 }
 
 export function joinRoom(roomCode, socketId, username) {
-    if (rooms[roomCode] && rooms[roomCode].length < 2) {
+    if (rooms[roomCode] && rooms[roomCode].length < 4) {
         rooms[roomCode].push({ id: socketId, name: username });
         return true;
     }

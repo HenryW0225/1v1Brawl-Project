@@ -72,7 +72,7 @@ export function fire_assault_rife() {
             roomCode: session.roomCode,
             world_x: session.player.world_x,
             world_y: session.player.world_y,
-            angle: session.player.angle - Math.PI / 2,
+            angle: session.player.angle - Math.PI/2,
             type: 1,
             distance: 0
         });
@@ -92,7 +92,7 @@ export function fire_shotgun() {
                 roomCode: session.roomCode,
                 world_x: session.player.world_x,
                 world_y: session.player.world_y,
-                angle: session.player.angle - Math.PI / 2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
+                angle: session.player.angle - Math.PI/2 + (Math.random() * shotgun.spread - shotgun.spread / 2),
                 type: 2,
                 distance: 0
             });
@@ -112,7 +112,7 @@ export function fire_mosin() {
             roomCode: session.roomCode,
             world_x: session.player.world_x,
             world_y: session.player.world_y,
-            angle: session.player.angle - Math.PI / 2,
+            angle: session.player.angle - Math.PI/2,
             type: 3,
             distance: 0
         });
@@ -208,7 +208,9 @@ export function move_bullets() {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < 30 && !bullet.hit) {
-                bullet.hit = true;
+                if (bullet.type !== 3) {
+                    bullet.hit = true;
+                }
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,
                     damage: stats.damage,
@@ -241,7 +243,7 @@ export function draw_bullets() {
 
         constants.ctx.save();
         constants.ctx.translate(bullet.world_x - camera_x, bullet.world_y - camera_y);
-        constants.ctx.rotate(bullet.angle);
+        constants.ctx.rotate(bullet.angle + Math.PI/2);
         constants.ctx.drawImage(
             images.bulletImg,
             -stats.width / 2,

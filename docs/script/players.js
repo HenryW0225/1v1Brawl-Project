@@ -3,7 +3,10 @@ import * as input from './input.js';
 import * as constants from './constants.js';
 import * as session from './session.js';
 import * as equipment from './equipment.js';
+import * as sounds from './sounds.js';
 import { socket } from './socket.js';
+
+
 
 export function move_player_locally() {
     let dx = 0, dy = 0;
@@ -12,6 +15,8 @@ export function move_player_locally() {
     if (input.keys["KeyW"]) dy -= 1;
     if (input.keys["KeyS"]) dy += 1;
 
+    sounds.playFootstepsSound(dx, dy);
+    
     const len = Math.hypot(dx, dy);
     if (len > 0) {
         dx = (dx / len) * session.player.speed;

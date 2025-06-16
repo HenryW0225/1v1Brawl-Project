@@ -7,6 +7,7 @@ import * as weapons from './weapons.js';
 import * as input from './input.js';
 import * as equipment from './equipment.js';
 import * as crates from './crates.js';
+import * as sounds from './sounds.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -94,7 +95,8 @@ socket.on('game-over', () => {
     input.reset();
     equipment.equipments_reset();
     crates.reset_crates();
-
+    sounds.reset_sounds();
+    
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
@@ -103,7 +105,7 @@ socket.on('game-over', () => {
 
 socket.on('remove-bullet', (bulletId) => {
     const index = weapons.bullets.findIndex(bullet => bullet.bulletId === bulletId);
-    if (index !== -1) {
+    if (index !== -1 && weapons.bullets[index].type !== 3) {
         weapons.bullets.splice(index, 1);
     }
 });

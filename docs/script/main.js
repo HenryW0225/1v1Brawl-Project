@@ -92,6 +92,7 @@ socket.on('update-health', ({ newHealth} ) => {
 });
 
 socket.on('game-over', () => {
+    gameLoop.stop_game_loop();
     session.players_reset();
     weapons.weapons_reset();
     input.reset();

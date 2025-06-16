@@ -135,12 +135,10 @@ export function update_ammo() {
 export function switch_weapons() {
     if (input.keys["Digit1"] && session.player.weapon !== 1) {
         cancelReload();
-        clearTimeout(sgSlowTimeoutId);
         session.player.weapon = 1;
         session.player.speed = 5;
     } else if (input.keys["Digit2"] && session.player.weapon !== 2) {
         cancelReload();
-        clearTimeout(arSlowTimeoutId);
         session.player.weapon = 2;
         session.player.speed = 5;
     }
@@ -245,9 +243,6 @@ export function weapons_reset() {
     bullets.length = 0;
     pendingBullets.length = 0;
     cancelReload();
-    clearTimeout(arSlowTimeoutId);
-    clearTimeout(sgSlowTimeoutId);
-    sgSlowTimeoutId = null;
     bandages.amount = 5;
     session.player.speed = 5;
     session.player.weapon = 1;

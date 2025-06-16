@@ -45,7 +45,7 @@ export function game_loop(timestamp) {
         weapons.fire_mosin();
     }
 
-    if (Math.random() < 0.001 && timestamp - lastCrateSpawn >= 1000) {
+    if (Math.random() < 0.00035 && timestamp - lastCrateSpawn >= 1000) {
         lastCrateSpawn = timestamp;
         const newCrates = crates.create_crates(1, 1);
         socket.emit('create-crates', { roomCode: session.roomCode, new_crates: newCrates});

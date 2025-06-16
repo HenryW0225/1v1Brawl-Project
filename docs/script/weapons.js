@@ -28,7 +28,7 @@ export let mosin = {
 export const bulletStats = {
     1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 },
     2: { speed: 20, range: 25, damage: -5, width: 10, height: 20 },
-    3: { speed: 30, range: 80, damage: -30, width: 20, height: 35} 
+    3: { speed: 25, range: 80, damage: -25, width: 20, height: 35} 
 };
 
 export let bullets = [];
@@ -80,6 +80,14 @@ export function fire_assault_rife() {
             distance: 0
         });
 
+        socket.emit('proximity-sound-request', { 
+            roomCode: session.roomCode,
+            audio: "arshot",
+            world_x: session.player.world_x,
+            world_y: session.player.world_y,
+            distance: sounds.proximity_range
+        });
+
         slowPlayer(arSlowTimeoutId, 500, id => arSlowTimeoutId = id);
     }
 }
@@ -102,6 +110,14 @@ export function fire_shotgun() {
             });
         }
 
+        socket.emit('proximity-sound-request', { 
+            roomCode: session.roomCode,
+            audio: "sgshot",
+            world_x: session.player.world_x,
+            world_y: session.player.world_y,
+            distance: sounds.proximity_range
+        });
+
         slowPlayer(sgSlowTimeoutId, 1000, id => sgSlowTimeoutId = id);
     }
 }
@@ -120,6 +136,14 @@ export function fire_mosin() {
             angle: session.player.angle - Math.PI/2,
             type: 3,
             distance: 0
+        });
+
+        socket.emit('proximity-sound-request', { 
+            roomCode: session.roomCode,
+            audio: "msshot",
+            world_x: session.player.world_x,
+            world_y: session.player.world_y,
+            distance: sounds.proximity_range
         });
 
         slowPlayer(msSlowTimeoutId, 1500, id => msSlowTimeoutId = id);
@@ -150,7 +174,7 @@ export function weapons_reload() {
             if (shotgun.ammo >= sg_ammo) {
                 cancelReload();
             }
-        }, 750);
+        }, 800);
     }
     else if (session.player.weapon === 3 && mosin.ammo < ms_ammo) {
         isReloading = true;
@@ -163,7 +187,7 @@ export function weapons_reload() {
             if (mosin.ammo >= ms_ammo) {
                 cancelReload();
             }
-        }, 800);
+        }, 1000);
     }
 }
 
@@ -227,6 +251,14 @@ export function move_bullets() {
                     bulletId: bullet.bulletId,
                     protection: equipment.helmetStats[equipment.players_equipment[session.player.socket_Id].helmet].protection +
                                 equipment.vestStats[equipment.players_equipment[session.player.socket_Id].vest].protection
+                });
+
+                socket.emit('proximity-sound-request', { 
+                    roomCode: session.roomCode,
+                    audio: "bullethit",
+                    world_x: session.player.world_x,
+                    world_y: session.player.world_y,
+                    distance: sounds.proximity_range
                 });
                 continue;
             }

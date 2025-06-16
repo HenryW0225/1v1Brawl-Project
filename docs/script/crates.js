@@ -2,6 +2,7 @@ import * as images from './images.js';
 import * as constants from './constants.js';
 import * as session from './session.js';
 import * as equipment from './equipment.js';
+import * as sounds from './sounds.js';
 import { socket } from './socket.js';
 
 let game_crates = {}; 
@@ -126,6 +127,14 @@ export function bullet_check(bullet, damage) {
                     bulletId: bullet.bulletId,
                     new_equipment: new_equipment
                 });
+
+                socket.emit('proximity-sound-request', { 
+                    roomCode: session.roomCode,
+                    audio: "cratebreaking",
+                    world_x: session.player.world_x,
+                    world_y: session.player.world_y,
+                    distance: sounds.proximity_range
+                });
                 return;
             }
             socket.emit('crate-hit', {
@@ -133,6 +142,14 @@ export function bullet_check(bullet, damage) {
                 damage: damage,
                 crateId: id,
                 bulletId: bullet.bulletId
+            });
+
+            socket.emit('proximity-sound-request', { 
+                roomCode: session.roomCode,
+                audio: "bullethit",
+                world_x: session.player.world_x,
+                world_y: session.player.world_y,
+                distance: sounds.proximity_range
             });
         }
     }

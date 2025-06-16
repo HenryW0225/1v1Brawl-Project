@@ -89,6 +89,10 @@ io.on('connection', (socket) => {
         io.to(roomCode).emit('remove-bullet', (bulletId));
     });
 
+    socket.on('proximity-sound-request', ({ roomCode, audio, world_x, world_y, distance }) => {
+        io.to(roomCode).emit('proximity-play-sound', {audio, world_x, world_y, distance});
+    });
+
     socket.on('disconnect', () => {
         const roomCode = leaveRoom(socket.id);
         if (roomCode) {

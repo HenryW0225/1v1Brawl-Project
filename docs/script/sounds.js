@@ -1,30 +1,32 @@
-const footstepsSound = new Audio('sounds/footsteps.wav');
+const footstepsSound = new Audio('script/sounds/footsteps.wav');
 footstepsSound.loop = true;
 let footstepsStart = true;
 
-export const arshotSound = new Audio('sounds/arshot.wav');
+export const arshotSound = new Audio('script/sounds/arshot.wav');
 
-export const arReloadingSound = new Audio ('sounds/arReloading.wav');
+export const arReloadingSound = new Audio ('script/sounds/arReloading.wav');
 
-export const sgshotSound = new Audio('sounds/sgshot.wav');
+export const sgshotSound = new Audio('script/sounds/sgshot.wav');
 
-export const sgReloadingSound = new Audio ('sounds/sgReloading.wav');
+export const sgReloadingSound = new Audio ('script/sounds/sgReloading.wav');
 
-export const msshotSound = new Audio('sounds/msshot.wav');
+export const msshotSound = new Audio('script/sounds/msshot.wav');
 
-export const msReloadingSound = new Audio ('sounds/msReloading.wav');
+export const msReloadingSound = new Audio ('script/sounds/msReloading.wav');
 
-export const bulletHitSound = new Audio ('sounds/bulletHit.wav');
+export const bulletHitSound = new Audio ('script/sounds/bulletHit.wav');
 
-export const crateBreakingSound = new Audio ('sounds/crateBreaking.wav');
+export const crateBreakingSound = new Audio ('script/sounds/crateBreaking.wav');
 
-export const victorySound = new Audio ('sounds/victory.wav');
+export const victorySound = new Audio ('script/sounds/victory.wav');
 
-export const playerDeathSound = new Audio ('sounds/playerDeath.wav');
+export const playerDeathSound = new Audio ('script/sounds/playerDeath.wav');
 
-export const backgroundMusic = new Audio ('sounds/backgroundMusic.wav');
+export const backgroundMusic = new Audio ('script/sounds/backgroundMusic.wav');
+backgroundMusic.loop = true;
 
 
+export const proximity_range = 750;
 
 export function playClonedSound(audio) {
     const clone = audio.cloneNode();
@@ -32,7 +34,6 @@ export function playClonedSound(audio) {
 }
 
 export function playSound(audio) {
-    audio.currentTime = 0;
     audio.play();
 }
 
@@ -49,8 +50,11 @@ export function playFootstepsSound(dx, dy) {
 
 export function cancelReload() {
     arReloadingSound.pause();
+    arReloadingSound.currentTime = 0;
     sgReloadingSound.pause();
+    sgReloadingSound.currentTime = 0;
     msReloadingSound.pause();
+    msReloadingSound.currentTime = 0;
 }
 
 export function reset_sounds() {
@@ -58,12 +62,5 @@ export function reset_sounds() {
     footstepsSound.currentTime = 0;
     footstepsStart = true;
 
-    arshotSound.pause();
-    arshotSound.currentTime = 0;
-
-    sgshotSound.pause();
-    sgshotSound.currentTime = 0;
-
-    msshotSound.pause();
-    msshotSound.currentTime = 0;
+    cancelReload();
 }

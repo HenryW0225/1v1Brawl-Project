@@ -12,10 +12,12 @@ import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
     startUI.create_button();
+    sounds.playSound(sounds.backgroundMusic);
 });
 
 startUI.joinBtn.addEventListener("click", () => {
     startUI.join_button();
+    sounds.playSound(sounds.backgroundMusic);
 });
 
 startUI.enterBtn.addEventListener("click", () => {
@@ -50,6 +52,7 @@ socket.on('player-list-updated', (players) => {
 });
 
 socket.on('game-started', () => {
+    sounds.backgroundMusic.pause();
     gameLoop.start_game_loop();
     document.getElementById('healthBar').style.width = 100 + '%';
     document.getElementById('healthBarText').textContent = 100 + ' / 100';
@@ -89,7 +92,6 @@ socket.on('update-health', ({ newHealth} ) => {
 });
 
 socket.on('game-over', () => {
-    gameLoop.stop_game_loop();
     session.players_reset();
     weapons.weapons_reset();
     input.reset();
@@ -100,14 +102,19 @@ socket.on('game-over', () => {
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
+        sounds.playSound(sounds.backgroundMusic);
     }, 2000); 
 });
 
 socket.on('player-death', (socket_Id) => {
-    if (session.opponent_players && socket_Id in session.opponent_players) {
-        delete session.opponent_players[socket_Id];
-    }
     if (socket_Id === session.player.socket_Id) {
+        layout.background_map();
+        gameLoop.stop_game_loop();
+        weapons.move_bullets();
+        weapons.draw_bullets();
+        crates.draw_crates();
+        players.draw_opponent_players();
+
         sounds.playSound(sounds.playerDeathSound);
     } 
 });
@@ -136,4 +143,26 @@ socket.on('remove-crate', ({ crateId, playerId, new_equipment }) => {
     crates.destroy_crate(crateId);
     equipment.update_player_equipment(playerId, new_equipment);
     weapons.update_ammo();
+});
+
+socket.on('proximity-play-sound', ({ audio, world_x, world_y, distance }) => {
+    const offset_x = session.player.world_x - world_x;
+    const offset_y = session.player.world_y - world_y;
+    if (Math.sqrt(offset_x*offset_x + offset_y*offset_y) <= distance) {
+        if (audio === "arshot") {
+            sounds.playClonedSound(sounds.arshotSound);
+        } 
+        else if (audio === "sgshot") {
+            sounds.playClonedSound(sounds.sgshotSound);
+        }
+        else if (audio === "msshot") {
+            sounds.playClonedSound(sounds.msshotSound);
+        } 
+        else if (audio === "cratebreaking") {
+            sounds.playClonedSound(sounds.crateBreakingSound);
+        }
+        else if (audio === "bullethit") {
+            sounds.playClonedSound(sounds.bulletHitSound);
+        }
+    }
 });

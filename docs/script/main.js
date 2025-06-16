@@ -93,6 +93,7 @@ socket.on('game-over', () => {
     weapons.weapons_reset();
     input.reset();
     equipment.equipments_reset();
+    crates.reset_crates();
 
     setTimeout(() => {
         document.getElementById("gameContainer").style.display = "none";

@@ -6,8 +6,8 @@ import { socket } from './socket.js';
 
 let game_crates = {}; 
 
-export function create_crates() {
-    const crateCount = Math.floor(Math.random() * 6) + 5;
+export function create_crates(min, max) {
+    const crateCount = Math.floor(Math.random() * (max-min+1)) + min;
     const crateSize = 80;
     const halfSize = crateSize / 2;
     const maxAttempts = 1000;
@@ -44,6 +44,21 @@ export function create_crates() {
         }
 
         if (!overlaps) {
+            for (const id in game_crates) {
+                const c = game_crates[id];
+                if (
+                    x < c.x + crateSize &&
+                    x > c.x - crateSize &&
+                    y < c.y + crateSize &&
+                    y > c.y - crateSize
+                ) {
+                    overlaps = true;
+                    break;
+                }
+            }
+        }
+
+        if (!overlaps) {
             const crateId = crypto.randomUUID();
             created_crates[crateId] = newCrate;
             i++;
@@ -56,7 +71,6 @@ export function create_crates() {
 }
 
 export function add_crates(new_crates) {
-    for (const key in game_crates) delete game_crates[key]; 
     Object.assign(game_crates, new_crates); 
 }
 
@@ -132,4 +146,8 @@ export function update_crate_hp(crateId, damage) {
 
 export function destroy_crate(crateId) {
     delete game_crates[crateId];
+}
+
+export function reset_crates() {
+    for (const key in game_crates) delete game_crates[key]; 
 }

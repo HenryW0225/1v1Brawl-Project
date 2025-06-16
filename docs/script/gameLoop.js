@@ -3,8 +3,10 @@ import * as players from './players.js';
 import * as layout from './layout.js';
 import * as session from './session.js';
 import * as crates from './crates.js';
+import { socket } from './socket.js';
 
 let lastServerUpdate = 0;
+let lastCrateSpawn = 0;
 
 let game_running = true;
 
@@ -39,11 +41,18 @@ export function game_loop(timestamp) {
         weapons.fire_shotgun();
     }
 
+    if (Math.random() < 0.01 && timestamp - lastCrateSpawn >= 1000) {
+        lastCrateSpawn = timestamp;
+        const newCrates = crates.create_crates(0, 1);
+        socket.emit('create-crates', { roomCode: session.roomCode, new_crates: newCrates});
+    }
+
     weapons.use_bandage();
     weapons.switch_weapons();
     weapons.weapons_reload();
     weapons.move_bullets();
     weapons.draw_bullets();
+
 
     crates.draw_crates();
 

@@ -162,7 +162,7 @@ export function move_bullets() {
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < 35 && !bullet.hit) {
+            if (dist < 30 && !bullet.hit) {
                 bullet.hit = true;
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,

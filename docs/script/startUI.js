@@ -5,7 +5,6 @@ export const enterBtn = document.getElementById("enterBtn");
 export const codeInput = document.getElementById("codeInput");
 export const startBtn = document.getElementById("startBtn");
 
-import * as constants from './constants.js';
 import * as session from './session.js';
 import * as crates from './crates.js';
 import { socket } from './socket.js';

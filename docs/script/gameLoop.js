@@ -10,6 +10,11 @@ let lastCrateSpawn = 0;
 
 let game_running = true;
 
+export let screen = {
+    camera_x: 0,
+    camera_y: 0
+}
+
 export function start_game_loop() {
     game_running = true;
 }
@@ -23,13 +28,17 @@ export function game_loop(timestamp) {
         return;
     }
 
+    screen.camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
+    screen.camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
+
+
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
     document.getElementById("msAmmo").textContent = weapons.mosin.ammo;
     document.getElementById("bandagesAmount").textContent = weapons.bandages.amount; 
 
-    layout.background_map();
-    players.move_player_locally();
+    layout.background_map(screen);
+    players.move_player_locally(screen);
 
     if (timestamp - lastServerUpdate >= 50) {
         players.update_player_server();
@@ -55,12 +64,12 @@ export function game_loop(timestamp) {
     weapons.switch_weapons();
     weapons.weapons_reload();
     weapons.move_bullets();
-    weapons.draw_bullets();
+    weapons.draw_bullets(screen);
 
 
-    crates.draw_crates();
+    crates.draw_crates(screen);
 
-    players.draw_player();
-    players.draw_opponent_players();
+    players.draw_player(screen);
+    players.draw_opponent_players(screen);
     requestAnimationFrame(game_loop);
 }

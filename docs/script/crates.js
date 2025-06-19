@@ -26,7 +26,7 @@ export function create_crates(min, max) {
             y, 
             width: crateSize,
             height: crateSize,
-            hp: 30,
+            hp: 25,
             used: false
         };
 
@@ -75,28 +75,18 @@ export function add_crates(new_crates) {
     Object.assign(game_crates, new_crates); 
 }
 
-export function draw_crates() {
-    const camera = {
-        x: session.player.world_x - constants.ctx_width / 2,
-        y: session.player.world_y - constants.ctx_height / 2,
-        width: constants.ctx_width,
-        height: constants.ctx_height
-    };
-
-    camera.x = Math.max(0, Math.min(camera.x, constants.world_width - camera.width));
-    camera.y = Math.max(0, Math.min(camera.y, constants.world_height - camera.height));
-
+export function draw_crates(screen) {
     for (const id in game_crates) {
         const crate = game_crates[id];
 
-        const screenX = crate.x - crate.width / 2 - camera.x;
-        const screenY = crate.y - crate.height / 2 - camera.y;
+        const screenX = crate.x - crate.width / 2 - screen.camera_x;
+        const screenY = crate.y - crate.height / 2 - screen.camera_y;
 
         if (
             screenX + crate.width < 0 ||
-            screenX > camera.width ||
+            screenX > constants.ctx_width ||
             screenY + crate.height < 0 ||
-            screenY > camera.height
+            screenY > constants.ctx_height
         ) {
             continue;
         }
@@ -115,7 +105,7 @@ export function bullet_check(bullet, damage) {
     for (const id in game_crates) {
         const crate = game_crates[id];
         const distance = Math.sqrt((crate.x - bullet.world_x) * (crate.x - bullet.world_x) + (crate.y - bullet.world_y) * (crate.y - bullet.world_y));
-        if (distance < crate.width/2 + 5 && !bullet.hit) {
+        if (distance < crate.width/2 + 2.5 && !bullet.hit) {
             bullet.hit = true;
             if (crate.hp + damage <= 0 && !crate.used) {
                 crate.used = true;
@@ -157,8 +147,8 @@ export function bullet_check(bullet, damage) {
 
 export function update_crate_hp(crateId, damage) {
     game_crates[crateId].hp += damage;
-    game_crates[crateId].width += damage;
-    game_crates[crateId].height += damage;
+    game_crates[crateId].width += damage*0.75;
+    game_crates[crateId].height += damage*0.75;
 }
 
 export function destroy_crate(crateId) {

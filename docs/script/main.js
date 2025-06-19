@@ -8,6 +8,7 @@ import * as input from './input.js';
 import * as equipment from './equipment.js';
 import * as crates from './crates.js';
 import * as sounds from './sounds.js';
+import * as players from './players.js';
 import { socket } from './socket.js';
 
 startUI.createBtn.addEventListener("click", () => {
@@ -77,7 +78,9 @@ socket.on('state-update', ({ players }) => {
 });
 
 socket.on("remove-player", (id) => {
-    delete session.opponent_players[id];
+    if (session.opponent_players[id]) {
+        delete session.opponent_players[id];
+    }
 });
 
 socket.on('bullet-fired', (bullet) => {
@@ -91,16 +94,15 @@ socket.on('update-health', ({ newHealth} ) => {
     document.getElementById('healthBarText').textContent = newHealth + ' / 100';
 });
 
-socket.on('game-over', () => {
-    gameLoop.stop_game_loop();
-    session.players_reset();
-    weapons.weapons_reset();
-    input.reset();
-    equipment.equipments_reset();
-    crates.reset_crates();
-    sounds.reset_sounds();
-
+socket.on('game-over', () => { 
     setTimeout(() => {
+        session.players_reset();
+        weapons.weapons_reset();
+        input.reset();
+        equipment.equipments_reset();
+        crates.reset_crates();
+        sounds.reset_sounds();
+
         document.getElementById("gameContainer").style.display = "none";
         document.getElementById("loadingPage").style.display = "block";
         sounds.playSound(sounds.backgroundMusic);
@@ -108,14 +110,14 @@ socket.on('game-over', () => {
 });
 
 socket.on('player-death', () => {
+    sounds.playSound(sounds.playerDeathSound);
     gameLoop.stop_game_loop();
     layout.background_map();
-    weapons.move_bullets();
     weapons.draw_bullets();
     crates.draw_crates();
     players.draw_opponent_players();
 
-    sounds.playSound(sounds.playerDeathSound);
+    layout.draw_defeat_sign();
 }); 
 
 socket.on('remove-bullet', (bulletId) => {
@@ -168,7 +170,13 @@ socket.on('proximity-play-sound', ({ audio, world_x, world_y, distance }) => {
 
 socket.on('victory', () => {
     sounds.playSound(sounds.victorySound);
-    //victory screen
+    gameLoop.stop_game_loop();
+    layout.background_map();
+    weapons.draw_bullets();
+    crates.draw_crates();
+    players.draw_player();
+
+    layout.draw_victory_sign();
 }); 
 
 socket.on('starting-position', ({ world_x, world_y }) => {

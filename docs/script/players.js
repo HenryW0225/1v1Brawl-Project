@@ -7,8 +7,7 @@ import * as sounds from './sounds.js';
 import { socket } from './socket.js';
 
 
-
-export function move_player_locally() {
+export function move_player_locally(screen) {
     let dx = 0, dy = 0;
     if (input.keys["KeyA"]) dx -= 1;
     if (input.keys["KeyD"]) dx += 1;
@@ -26,11 +25,8 @@ export function move_player_locally() {
     session.player.world_x = Math.max(0, Math.min(constants.world_width, session.player.world_x + dx));
     session.player.world_y = Math.max(0, Math.min(constants.world_height, session.player.world_y + dy));
 
-    const camX = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
-    const camY = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
-
-    const worldMouseX = input.mouseX + camX;
-    const worldMouseY = input.mouseY + camY;
+    const worldMouseX = input.mouseX + screen.camera_x;
+    const worldMouseY = input.mouseY + screen.camera_y;
 
     session.player.angle = Math.atan2(
         worldMouseY - session.player.world_y,
@@ -47,19 +43,22 @@ export function update_player_server() {
     }); 
 }
 
-export function draw_player() {
-    const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
-    const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
-
-    const offsetX = session.player.world_x - position_x + constants.ctx_width / 2;
-    const offsetY = session.player.world_y - position_y + constants.ctx_height / 2;
+export function draw_player(screen) {
+    const offsetX = session.player.world_x - screen.camera_x;
+    const offsetY = session.player.world_y - screen.camera_y;
 
     constants.ctx.save();
     constants.ctx.translate(offsetX, offsetY);
     constants.ctx.rotate(session.player.angle);
     equipment.draw_players_vest(session.player.socket_Id);
     equipment.draw_players_backpack(session.player.socket_Id);
-    constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
+    constants.ctx.drawImage(
+        images.playerImg,
+        -session.player.width / 2,
+        -session.player.height / 2,
+        session.player.width,
+        session.player.height
+    );
     equipment.draw_players_helmet(session.player.socket_Id);
     constants.ctx.restore();
 }
@@ -68,39 +67,43 @@ function lerp(a, b, t) {
     return a + (b - a) * t;
 }
 
-export function draw_opponent_players() {
-    const position_x = Math.max(Math.min(session.player.world_x, constants.world_width - constants.ctx_width / 2), constants.ctx_width / 2);
-    const position_y = Math.max(Math.min(session.player.world_y, constants.world_height - constants.ctx_height / 2), constants.ctx_height / 2);
-  
+export function draw_opponent_players(screen) {
     const now = Date.now();
-  
+
     for (const [id, opponent] of Object.entries(session.opponent_players)) {
-      const { prev, target, timestamp } = opponent;
-  
-      const elapsed = now - timestamp;
-      const interp = Math.min(elapsed / 50, 1); 
-  
-      const world_x = lerp(prev.world_x, target.world_x, interp);
-      const world_y = lerp(prev.world_y, target.world_y, interp);
-  
-      const prevAngle = prev.angle;
-      const targetAngle = target.angle;
-      let angleDiff = targetAngle - prevAngle;
-      if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
-      if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
-      const angle = prevAngle + angleDiff * interp;
-  
-      const screen_x = world_x - position_x + constants.ctx_width / 2;
-      const screen_y = world_y - position_y + constants.ctx_height / 2;
-  
-      constants.ctx.save();
-      constants.ctx.translate(screen_x, screen_y);
-      constants.ctx.rotate(angle);
-      equipment.draw_players_vest(id);
-      equipment.draw_players_backpack(id);
-      constants.ctx.drawImage(images.playerImg, -session.player.width / 2, -session.player.height / 2, session.player.width, session.player.height);
-      equipment.draw_players_helmet(id);
-      constants.ctx.restore();
+        const { prev, target, timestamp } = opponent;
+
+        const elapsed = now - timestamp;
+        const interp = Math.min(elapsed / 50, 1);
+
+        const world_x = lerp(prev.world_x, target.world_x, interp);
+        const world_y = lerp(prev.world_y, target.world_y, interp);
+
+        const prevAngle = prev.angle;
+        const targetAngle = target.angle;
+        let angleDiff = targetAngle - prevAngle;
+        if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+        if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+        const angle = prevAngle + angleDiff * interp;
+
+        const screen_x = world_x - screen.camera_x;
+        const screen_y = world_y - screen.camera_y;
+
+        constants.ctx.save();
+        constants.ctx.translate(screen_x, screen_y);
+        constants.ctx.rotate(angle);
+        equipment.draw_players_vest(id);
+        equipment.draw_players_backpack(id);
+        constants.ctx.drawImage(
+            images.playerImg,
+            -session.player.width / 2,
+            -session.player.height / 2,
+            session.player.width,
+            session.player.height
+        );
+        equipment.draw_players_helmet(id);
+        constants.ctx.restore();
     }
-  }
+}
+
   

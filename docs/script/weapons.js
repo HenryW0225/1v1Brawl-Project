@@ -28,7 +28,7 @@ export let mosin = {
 export const bulletStats = {
     1: { speed: 15, range: 60, damage: -5, width: 15, height: 30 },
     2: { speed: 20, range: 25, damage: -5, width: 10, height: 20 },
-    3: { speed: 25, range: 80, damage: -25, width: 20, height: 35} 
+    3: { speed: 25, range: 80, damage: -27.5, width: 20, height: 35} 
 };
 
 export let bullets = [];
@@ -188,7 +188,7 @@ export function weapons_reload() {
             if (mosin.ammo >= ms_ammo) {
                 cancelReload();
             }
-        }, 1000);
+        }, 1250);
     }
 }
 
@@ -242,7 +242,7 @@ export function move_bullets() {
             const dy = bullet.world_y - session.player.world_y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < 30 && !bullet.hit) {
+            if (dist < 27.5 && !bullet.hit) {
                 bullet.hit = true;
                 socket.emit('player-hit', {
                     roomCode: session.roomCode,
@@ -274,16 +274,13 @@ export function move_bullets() {
     pendingBullets.length = 0;
 }
 
-export function draw_bullets() {
+export function draw_bullets(screen) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         const stats = bulletStats[bullet.type];
 
-        const camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
-        const camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
-
         constants.ctx.save();
-        constants.ctx.translate(bullet.world_x - camera_x, bullet.world_y - camera_y);
+        constants.ctx.translate(bullet.world_x - screen.camera_x, bullet.world_y - screen.camera_y);
         constants.ctx.rotate(bullet.angle + Math.PI/2);
         constants.ctx.drawImage(
             images.bulletImg,

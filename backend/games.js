@@ -101,9 +101,6 @@ export function player_hit(roomCode, socket_Id, bulletId, io) {
             }
             io.to(Object.keys(room.players)[0]).emit('victory');
             io.to(roomCode).emit('game-over');
-            for (let key in room.starting_positions) {
-                room.starting_positions[key].taken = false;
-            }
             delete gameStates[roomCode]; 
         }
     }

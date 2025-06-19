@@ -28,17 +28,17 @@ export function game_loop(timestamp) {
         return;
     }
 
-    screen.camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
-    screen.camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
-
-
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
     document.getElementById("msAmmo").textContent = weapons.mosin.ammo;
     document.getElementById("bandagesAmount").textContent = weapons.bandages.amount; 
 
-    layout.background_map(screen);
     players.move_player_locally(screen);
+
+    screen.camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
+    screen.camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
+
+    layout.background_map();
 
     if (timestamp - lastServerUpdate >= 50) {
         players.update_player_server();

@@ -12,8 +12,6 @@ export function players_reset() {
     player.world_y = constants.world_height/2;
     player.angle = 0;
     player.health = 100;
-    player.weapon = 1;
-    player.speed = 5;
     opponent_players = {};
 }
 

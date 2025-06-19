@@ -61,6 +61,4 @@ export function reset_sounds() {
     footstepsSound.pause();
     footstepsSound.currentTime = 0;
     footstepsStart = true;
-
-    cancelReload();
 }

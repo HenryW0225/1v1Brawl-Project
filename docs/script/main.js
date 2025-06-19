@@ -112,10 +112,10 @@ socket.on('game-over', () => {
 socket.on('player-death', () => {
     sounds.playSound(sounds.playerDeathSound);
     gameLoop.stop_game_loop();
-    layout.background_map();
-    weapons.draw_bullets();
-    crates.draw_crates();
-    players.draw_opponent_players();
+    layout.background_map(gameLoop.screen);
+    weapons.draw_bullets(gameLoop.screen);
+    crates.draw_crates(gameLoop.screen);
+    players.draw_opponent_players(gameLoop.screen);
 
     layout.draw_defeat_sign();
 }); 
@@ -171,10 +171,10 @@ socket.on('proximity-play-sound', ({ audio, world_x, world_y, distance }) => {
 socket.on('victory', () => {
     sounds.playSound(sounds.victorySound);
     gameLoop.stop_game_loop();
-    layout.background_map();
-    weapons.draw_bullets();
-    crates.draw_crates();
-    players.draw_player();
+    layout.background_map(gameLoop.screen);
+    weapons.draw_bullets(gameLoop.screen);
+    crates.draw_crates(gameLoop.screen);
+    players.draw_player(gameLoop.screen);
 
     layout.draw_victory_sign();
 }); 

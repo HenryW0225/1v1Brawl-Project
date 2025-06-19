@@ -330,6 +330,6 @@ export function weapons_reset() {
     pendingBullets.length = 0;
     cancelReload();
     bandages.amount = 5;
-    session.player.speed = 5;
     session.player.weapon = 1;
+    session.player.speed = 5;
 }

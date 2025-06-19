@@ -16,14 +16,14 @@ export const vestStats = {
     1: { color: '#c0c0c0', protection: 5 },
     2: { color: '#505050', protection: 10 },
     3: { color: '#000000', protection: 15 },
-    outer_radius: 24.5
+    outer_radius: 24.75
 };
 
 export const backpackStats = {
     0: { ar_ammo: 10, sg_ammo: 2, ms_ammo: 1}, 
-    1: { ar_ammo: 15, sg_ammo: 3, ms_ammo: 2, offset_y: 10 },
-    2: { ar_ammo: 25, sg_ammo: 5, ms_ammo: 3, offset_y: 14 },
-    3: { ar_ammo: 40, sg_ammo: 8, ms_ammo: 5, offset_y: 18 },
+    1: { ar_ammo: 15, sg_ammo: 3, ms_ammo: 2, offset_y: 12 },
+    2: { ar_ammo: 25, sg_ammo: 5, ms_ammo: 3, offset_y: 16 },
+    3: { ar_ammo: 40, sg_ammo: 8, ms_ammo: 5, offset_y: 20 },
     color: '#816537',
     radius: 18
 };
@@ -56,7 +56,7 @@ export function draw_players_vest(socket_Id) {
     const vestTier = equipment.vest;
     constants.ctx.fillStyle = vestStats[vestTier].color;
     constants.ctx.beginPath();
-    constants.ctx.arc(0, 1.5, vestStats.outer_radius, 0, 2 * Math.PI);
+    constants.ctx.arc(1, 1.5, vestStats.outer_radius, 0, 2 * Math.PI);
     constants.ctx.fill();
 }
 

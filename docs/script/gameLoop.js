@@ -3,6 +3,7 @@ import * as players from './players.js';
 import * as layout from './layout.js';
 import * as session from './session.js';
 import * as crates from './crates.js';
+import * as constants from './constants.js';
 import { socket } from './socket.js';
 
 let lastServerUpdate = 0;
@@ -33,12 +34,11 @@ export function game_loop(timestamp) {
     document.getElementById("msAmmo").textContent = weapons.mosin.ammo;
     document.getElementById("bandagesAmount").textContent = weapons.bandages.amount; 
 
-    players.move_player_locally(screen);
-
     screen.camera_x = Math.max(0, Math.min(session.player.world_x - constants.ctx_width / 2, constants.world_width - constants.ctx_width));
     screen.camera_y = Math.max(0, Math.min(session.player.world_y - constants.ctx_height / 2, constants.world_height - constants.ctx_height));
 
-    layout.background_map();
+    players.move_player_locally(screen);
+    layout.background_map(screen);
 
     if (timestamp - lastServerUpdate >= 50) {
         players.update_player_server();

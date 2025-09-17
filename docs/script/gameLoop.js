@@ -29,6 +29,7 @@ export function game_loop(timestamp) {
         return;
     }
 
+
     document.getElementById("arAmmo").textContent = weapons.assault_rife.ammo;
     document.getElementById("sgAmmo").textContent = weapons.shotgun.ammo; 
     document.getElementById("msAmmo").textContent = weapons.mosin.ammo;

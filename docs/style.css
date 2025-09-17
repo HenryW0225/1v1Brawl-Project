@@ -189,6 +189,12 @@
     text-shadow: 0 0 5px #000;
     pointer-events: none; 
   }
+
+  .highlight {
+    background-color: yellow; 
+    color: black;       
+    font-weight: bold;        
+  }
   
   
   

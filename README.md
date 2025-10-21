@@ -1,10 +1,10 @@
-🔫 Multiplayer Top-Down Shooter Game
+Multiplayer Top-Down Shooter Game
 Inspiration:
-I loved playing the popular online game survev.io with my friends and wanted to create a similar experience focused on private matches without random players, so my friends could enjoy battles together.
+I loved playing the popular online game survev.io with my friends and wanted to create a similar experience focused on private matches so I could ANNIHILATE my friends faster :)
 This is a real-time online multiplayer top-down shooter game built using CSS, HTML5 Canvas, JavaScript, Node.js, and Socket.IO.
-Try the game out yourself at henryw0225.github.io/1v1Brawl-Project/
+Try the game out yourself at henryw0225.github.io/1v1Brawl-Project/ - Starting request is delayed by 1 minute
 
-🎮 Features
+Features
 Real-time 1v1 multiplayer combat
 
 
@@ -30,8 +30,8 @@ Lobby system with room codes for easy private matches
 
 
 
-📁 Project Structure
-📦 backend/
+Project Structure
+backend/
 Server-side code and multiplayer logic.
 node_modules/ — Installed dependencies
 
@@ -52,7 +52,7 @@ games.js — Handles server-side game logic, game states, player movement, healt
 
 
 
-🖥️ docs/ (Frontend)
+docs/ (Frontend)
 Client-side files for rendering, input handling, audio, and UI.
 index.html — Main HTML structure including canvas and game/lobby UI
 
@@ -104,18 +104,18 @@ weapons.js — Defines weapon stats, reload mechanics, and shooting behavior, ha
 sounds.js — Import files and handle sound effects and background music
 
 
-📂 docs/script/sounds/
+docs/script/sounds/
 (various .wav files) — Audio files for sound effects and background music
 
 
 
-📄 Other Files
+Other Files
 README.md — This file, with setup instructions and game documentation
 
 
 .gitignore — Specifies files/folders Git should ignore (e.g. node_modules/, temp files)
 
-🚀 Future Ideas
+Future Ideas
 Implement a shrinking zone mechanic that forces players closer together over time
 
 
@@ -124,7 +124,7 @@ Add more weapon types and equipment
 
 Introduce better equipment upgrade and item pickup mechanics
 
-🎯 Usage Instructions
+Usage Instructions
 Creating a game:
  On the main screen, click Create Room to generate a unique room code. Share this code with your friend.
 
@@ -136,7 +136,7 @@ Joining a game:
 Gameplay basics:
 
 
-Move your player using WASD or arrow keys.
+Move your player using WASD.
 
 
 Aim and shoot using the mouse.
@@ -152,9 +152,8 @@ Use bandages to heal when injured (press E).
 
 
 Winning:
-Eliminate all opponents to win the match. Victory and death sounds will play accordingly. Then Play Again!
+Eliminate all opponents to win the match. Then Play Again!
 
-📬 Contact
-If you have questions, suggestions, or want to report bugs, feel free to open an issue or contact me at:
+Contact
 Email: hw363929@gmail.com
 GitHub: HenryW0225

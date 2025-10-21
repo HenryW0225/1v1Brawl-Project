@@ -1,4 +1,4 @@
-Multiplayer Top-Down Shooter Game
+## Multiplayer Top-Down Shooter Game
 Inspiration
 
 I loved playing the popular online game surviv.io with my friends and wanted to create a similar experience focused on private matches—so I could ANNIHILATE my friends faster :)
@@ -10,7 +10,7 @@ Note: the starting request is delayed by ~1 minute.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Features
+## Features
 
 Real-time 1v1 multiplayer combat
 
@@ -30,7 +30,9 @@ Lobby system with room codes for easy private matches
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Project Structure
+## Project Structure
+
+```text
 backend/           # Server-side code and multiplayer logic
   index.js         # Main entry point + socket message handling
   ...
@@ -44,9 +46,10 @@ docs/              # Frontend (client) files
 README.md          # Setup & documentation (this file)
 .gitignore         # Ignored files (node_modules/, temp files, etc.)
 
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Usage Instructions
+## Usage Instructions
 Creating a game
 
 On the main screen, click Create Room to generate a unique room code.
@@ -61,7 +64,7 @@ Click Join Room to enter the lobby.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Gameplay basics
+## Gameplay basics
 
 Move: W A S D
 
@@ -73,13 +76,12 @@ Reload: R
 
 Use bandages (heal): E
 
-Winning
-
 Eliminate all opponents to win the match. Then click Play Again!
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Contact
+
+## Contact
 
 Email: hw363929@gmail.com
 

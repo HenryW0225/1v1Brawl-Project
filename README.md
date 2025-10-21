@@ -45,11 +45,12 @@ docs/              # Frontend (client) files
     sounds/        # .wav files for SFX and background music
 README.md          # Setup & documentation (this file)
 .gitignore         # Ignored files (node_modules/, temp files, etc.)
+```   
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Usage Instructions
+## Usage Instructions
 Creating a game
 
 On the main screen, click Create Room to generate a unique room code.
@@ -64,7 +65,7 @@ Click Join Room to enter the lobby.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Gameplay basics
+## Gameplay basics
 
 Move: W A S D
 
@@ -80,8 +81,7 @@ Eliminate all opponents to win the match. Then click Play Again!
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-Contact
+## Contact
 
 Email: hw363929@gmail.com
 
